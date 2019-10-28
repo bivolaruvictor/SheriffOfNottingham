@@ -29,6 +29,7 @@ public final class GameInputLoader {
 
             for (int i = 0; i < noPlayers; ++i) {
                 playerOrder.add(fs.nextWord());
+                fs.writeWord(playerOrder.get(i));
             }
 
             noGoods = fs.nextInt();
