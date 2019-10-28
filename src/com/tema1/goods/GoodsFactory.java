@@ -138,10 +138,6 @@ public final class GoodsFactory {
         goodsById.put(LegalGoodsIds.SALT, good8);
         goodsById.put(LegalGoodsIds.SUGAR, good9);
 
-
-        for (Map.Entry<Integer, Goods> entry : goodsById.entrySet()) {
-            System.out.println(entry.getKey()+" : "+entry.getValue());
-        }
     }
 
     private void initIllegalGoods() {
