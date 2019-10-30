@@ -37,20 +37,20 @@ public final class Main {
                     fs.writeWord("Runda " + (j + 1) + " , " + "Subrunda " + (k + 1));
                     fs.writeNewLine();
                     players.get(k).makeSherriff();
-                    for (int i = 0; i < players.size(); ++i) {
-                       if (!players.get(i).isSherriff()) {
-                           List<Integer> cards = new ArrayList<Integer>(constants.getHandSize());
-                           for (int q = whereAmI; q < whereAmI + constants.getHandSize(); ++q) {
-                               cards.add(gameInput.getAssetIds().get(q));
-                           }
-                           players.get(i).putInHand(cards);
-                           whereAmI += constants.getHandSize();
-                       }
+                    for (Player value : players) {
+                        if (!value.isSherriff()) {
+                            List<Integer> cards = new ArrayList<>(constants.getHandSize());
+                            for (int q = whereAmI; q < whereAmI + constants.getHandSize(); ++q) {
+                                cards.add(gameInput.getAssetIds().get(q));
+                            }
+                            value.putInHand(cards);
+                            whereAmI += constants.getHandSize();
+                        }
                     }
 
-                    for (int i = 0; i < players.size(); ++i) {
-                        if (!players.get(i).isSherriff()) {
-                            fs.writeWord(players.get(i).showHand());
+                    for (Player player : players) {
+                        if (!player.isSherriff()) {
+                            fs.writeWord(player.showHand());
                             fs.writeNewLine();
                         } else {
                             fs.writeWord("N-am carti ca sunt serif");

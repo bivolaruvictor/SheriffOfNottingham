@@ -43,11 +43,11 @@ public class Player {
     }
 
     public String showHand() {
-        String toShow = "";
-        for (int i = 0; i < hand.size(); ++i) {
-           toShow += hand.get(i) + " ";
+        StringBuilder toShow = new StringBuilder();
+        for (Integer integer : hand) {
+            toShow.append(integer).append(" ");
         }
-        return toShow;
+        return toShow.toString();
     }
 
     public String typeToString() {
