@@ -27,7 +27,9 @@ public final class Main {
         try {
             FileSystem fs = new FileSystem(args[0], args[1]);
             for (int i = 0; i < gameInput.getPlayerNames().size(); ++i) {
-                players.add(new Player(gameInput.getPlayerNames().get(i)));
+                players.add(new Player(gameInput.getPlayerNames().get(i), i,
+                        constants.getStartingBudget()));
+                players.get(i).strategySet();
             }
 
             int whereAmI = 0;
@@ -44,6 +46,7 @@ public final class Main {
                                 cards.add(gameInput.getAssetIds().get(q));
                             }
                             value.putInHand(cards);
+                            value.makeBag();
                             whereAmI += constants.getHandSize();
                         }
                     }
@@ -63,6 +66,8 @@ public final class Main {
                     players.get(k).makeMerchant();
                 }
             }
+
+
 
             fs.close();
         } catch (IOException e) {
