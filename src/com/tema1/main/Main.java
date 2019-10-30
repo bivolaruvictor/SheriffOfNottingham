@@ -28,9 +28,6 @@ public final class Main {
                 players.add(new Player(gameInput.getPlayerNames().get(i)));
             }
 
-            for (int i = 0; i < players.size(); ++i) {
-                System.out.println(players.get(i).typeToString());
-            }
 
             fs.close();
         } catch (IOException e) {
