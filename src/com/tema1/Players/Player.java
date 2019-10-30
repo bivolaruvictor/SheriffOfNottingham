@@ -12,9 +12,9 @@ public class Player {
     private boolean isBasic = false;
     private boolean isGreedy = false;
     private boolean isBriber = false;
-    private List<String> hand;
-    private List<String> bag;
-    private List<String> market;
+    private List<Integer> hand;
+    private List<Integer> bag;
+    private List<Integer> market;
 
     public Player(final String playerType) {
         this.playerType = playerType;
@@ -25,19 +25,29 @@ public class Player {
         isSherriff = true;
     }
 
+    public boolean isSherriff() {
+        return isSherriff;
+    }
+
     public void makeMerchant() {
         isMerchant = true;
         isSherriff = false;
     }
 
-    public void putInHand(final List<String> chosenCards) {
+    public boolean isMerchant() {
+        return isMerchant;
+    }
+
+    public void putInHand(final List<Integer> chosenCards) {
         this.hand  = chosenCards;
     }
 
-    public void showHand() {
+    public String showHand() {
+        String toShow = "";
         for (int i = 0; i < hand.size(); ++i) {
-            System.out.println(hand.get(i));
+           toShow += hand.get(i) + " ";
         }
+        return toShow;
     }
 
     public String typeToString() {

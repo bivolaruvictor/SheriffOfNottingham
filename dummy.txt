@@ -1,0 +1,10 @@
+Runda 1 , Subrunda 1
+N-am carti ca sunt serif
+5 3 5 23 6 9 0 3 0 9 
+--------------------------
+
+Runda 1 , Subrunda 2
+24 8 9 21 8 5 7 1 0 0 
+N-am carti ca sunt serif
+--------------------------
+
