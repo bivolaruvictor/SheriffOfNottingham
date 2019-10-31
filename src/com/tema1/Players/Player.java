@@ -1,11 +1,9 @@
 package com.tema1.Players;
 
 import com.tema1.common.Constants;
-import java.util.ArrayList;
+
+import java.util.*;
 import java.util.Collections;
-import java.util.List;
-import java.util.Collections;
-import java.util.Comparator;
 
 import com.tema1.goods.Goods;
 
@@ -30,29 +28,7 @@ public class Player {
         this.budget = budget;
         this.id = id;
         this.playerType = playerType;
-        bag = new ArrayList<>(constants.getBagSize());
-    }
-
-    public void makeSherriff() {
-        isMerchant = false;
-        isSherriff = true;
-    }
-
-    public boolean isSherriff() {
-        return isSherriff;
-    }
-
-    public void makeMerchant() {
-        isMerchant = true;
-        isSherriff = false;
-    }
-
-    public boolean isMerchant() {
-        return isMerchant;
-    }
-
-    public int getBudget() {
-        return budget;
+        bag = new ArrayList<>(constants.BAG_SIZE);
     }
 
     public void putInHand(final List<Integer> chosenCards) {
@@ -65,6 +41,28 @@ public class Player {
             toShow.append(integer).append(" ");
         }
         return toShow.toString();
+    }
+
+    public void makeSherriff() {
+        isMerchant = false;
+        isSherriff = true;
+    }
+
+    public void makeMerchant() {
+        isMerchant = true;
+        isSherriff = false;
+    }
+
+    public boolean isSherriff() {
+        return isSherriff;
+    }
+
+    public boolean isMerchant() {
+        return isMerchant;
+    }
+
+    public int getBudget() {
+        return budget;
     }
 
     public String typeToString() {
@@ -124,9 +122,18 @@ public class Player {
     public void makeBriberBag() {
         List<Integer> toSort;
         toSort = getHand();
-        Collections.sort(toSort, new CardsComparator());
-        for (int i = 0; i < toSort.size(); ++i) {
-            System.out.print(toSort.get(i) + " ");
+        Map<Integer, Integer> map = new HashMap<>();
+        List<Integer> outputArray = new ArrayList<>();
+        for (int current : toSort) {
+            int count = map.getOrDefault(current, 0);
+            map.put(current, count + 1);
+            outputArray.add(current);
+        }
+
+        CardsComparator comp = new CardsComparator(map);
+        Collections.sort(outputArray, comp);
+        for (int i = 0; i < outputArray.size(); ++i) {
+            System.out.print(outputArray.get(i) + " ");
         }
         System.out.println();
     }

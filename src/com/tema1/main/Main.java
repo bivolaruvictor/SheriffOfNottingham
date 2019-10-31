@@ -28,7 +28,7 @@ public final class Main {
             FileSystem fs = new FileSystem(args[0], args[1]);
             for (int i = 0; i < gameInput.getPlayerNames().size(); ++i) {
                 players.add(new Player(gameInput.getPlayerNames().get(i), i,
-                        constants.getStartingBudget()));
+                        constants.STARTING_BUDGET));
                 players.get(i).strategySet();
             }
 
@@ -39,15 +39,15 @@ public final class Main {
                     fs.writeWord("Runda " + (j + 1) + " , " + "Subrunda " + (k + 1));
                     fs.writeNewLine();
                     players.get(k).makeSherriff();
-                    for (Player value : players) {
-                        if (!value.isSherriff()) {
-                            List<Integer> cards = new ArrayList<>(constants.getHandSize());
-                            for (int q = whereAmI; q < whereAmI + constants.getHandSize(); ++q) {
+                    for (Player gamer : players) {
+                        if (!gamer.isSherriff()) {
+                            List<Integer> cards = new ArrayList<>(constants.HAND_SIZE);
+                            for (int q = whereAmI; q < whereAmI + constants.HAND_SIZE; ++q) {
                                 cards.add(gameInput.getAssetIds().get(q));
                             }
-                            value.putInHand(cards);
-                            value.makeBag();
-                            whereAmI += constants.getHandSize();
+                            gamer.putInHand(cards);
+                            gamer.makeBag();
+                            whereAmI += constants.HAND_SIZE;
                         }
                     }
 
