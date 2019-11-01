@@ -6,5 +6,6 @@ public final class Constants {
     public static final int MAX_NO_SHERRIFF = 5;
     public static final int BAG_SIZE = 8;
     public static final int STARTING_BUDGET = 80;
-
+    public static final int MAX_LEGAL_INDEX = 9;
+    public static final int MAX_ILLEGAL_INDEX = 24;
 }

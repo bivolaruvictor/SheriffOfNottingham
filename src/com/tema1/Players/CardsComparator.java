@@ -12,7 +12,7 @@ public class CardsComparator implements Comparator<Integer> {
     private GoodsFactory goods;
     private Map<Integer, Goods> allGoods;
 
-    public CardsComparator(Map<Integer, Integer> freqMap) {
+    public CardsComparator(final Map<Integer, Integer> freqMap) {
         this.freqMap = freqMap;
         goods = GoodsFactory.getInstance();
         allGoods = goods.getAllGoods();

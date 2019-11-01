@@ -38,9 +38,9 @@ public final class Main {
                 for (int k = 0; k < gameInput.getPlayerNames().size(); ++k) {
                     fs.writeWord("Runda " + (j + 1) + " , " + "Subrunda " + (k + 1));
                     fs.writeNewLine();
-                    players.get(k).makeSherriff();
+                    players.get(k).makeSheriff();
                     for (Player gamer : players) {
-                        if (!gamer.isSherriff()) {
+                        if (!gamer.isSheriff()) {
                             List<Integer> cards = new ArrayList<>(constants.HAND_SIZE);
                             for (int q = whereAmI; q < whereAmI + constants.HAND_SIZE; ++q) {
                                 cards.add(gameInput.getAssetIds().get(q));
@@ -52,7 +52,7 @@ public final class Main {
                     }
 
                     for (Player player : players) {
-                        if (!player.isSherriff()) {
+                        if (!player.isSheriff()) {
                             fs.writeWord(player.showHand());
                             fs.writeNewLine();
                         } else {
