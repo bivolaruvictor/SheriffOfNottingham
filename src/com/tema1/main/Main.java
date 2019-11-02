@@ -53,21 +53,36 @@ public final class Main {
 
                     for (Player player : players) {
                         if (!player.isSheriff()) {
+                            fs.writeWord("Ce are " + " player " + player.getId() + " in mana :");
                             fs.writeWord(player.showHand());
                             fs.writeNewLine();
-                        } else {
-                            fs.writeWord("N-am carti ca sunt serif");
                             fs.writeNewLine();
+                            fs.writeWord("Ce isi pune " + " player " + player.getId() + " in sac :");
+                            fs.writeWord(player.showBag());
+                        } else {
+                            fs.writeNewLine();
+                            fs.writeWord("Player " + player.getId() + " spune : N-am carti ca sunt serif");
+                            fs.writeNewLine();
+                            player.controlPlayers(players);
                         }
                     }
+                    fs.writeNewLine();
                     fs.writeWord("--------------------------");
                     fs.writeNewLine();
-                    fs.writeNewLine();
+                    for (Player player : players) {
+                        fs.writeWord("Player " + player.getId() + " are ");
+                        fs.writeWord(player.showMoney());
+                        fs.writeWord(" bani ");
+                        fs.writeNewLine();
+                    }
                     players.get(k).makeMerchant();
                 }
             }
 
-
+//            for (Player player : players) {
+//                player.giveBonuses();
+//
+//            }
 
             fs.close();
         } catch (IOException e) {

@@ -8,4 +8,5 @@ public final class Constants {
     public static final int STARTING_BUDGET = 80;
     public static final int MAX_LEGAL_INDEX = 9;
     public static final int MAX_ILLEGAL_INDEX = 24;
+    public static final int MINIMUM_BUDGET = 16;
 }

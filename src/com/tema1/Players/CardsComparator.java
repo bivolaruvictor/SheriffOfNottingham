@@ -12,30 +12,17 @@ public class CardsComparator implements Comparator<Integer> {
     private GoodsFactory goods;
     private Map<Integer, Goods> allGoods;
 
+
     public CardsComparator(final Map<Integer, Integer> freqMap) {
         this.freqMap = freqMap;
         goods = GoodsFactory.getInstance();
         allGoods = goods.getAllGoods();
     }
 
-    public int compare(final Integer c1, final Integer c2) {
+    public final int compare(final Integer c1, final Integer c2) {
         int freqCompare = freqMap.get(c2).compareTo(freqMap.get(c1));
-        int profitCompare = 1;
-        if (allGoods.get(c1).getProfit() < allGoods.get(c2).getProfit()) {
-            profitCompare = 1;
-        } else if (allGoods.get(c1).getProfit() == allGoods.get(c2).getProfit()) {
-            profitCompare = 0;
-        } else {
-            profitCompare = -1;
-        }
-        int indexCompare;
-        if (allGoods.get(c1).getId() < allGoods.get(c2).getId()) {
-            indexCompare = 1;
-        } else if (allGoods.get(c1).getId() == allGoods.get(c2).getId()) {
-            indexCompare = 0;
-        } else {
-            indexCompare = -1;
-        }
+        int profitCompare = compareProfit(c1, c2);
+        int indexCompare = compareIndex(c1, c2);
         if (freqCompare == 0) {
             if (profitCompare == 0) {
                 return indexCompare;
@@ -44,5 +31,17 @@ public class CardsComparator implements Comparator<Integer> {
             }
         }
         return freqCompare;
+    }
+
+    public final int compareProfit(final Integer c1, final Integer c2) {
+        int profit1 = allGoods.get(c1).getProfit();
+        int profit2 = allGoods.get(c2).getProfit();
+        return (profit1 < profit2) ? 1 : ((profit1 == profit2) ? 0 : -1);
+    }
+
+    public final int compareIndex(final Integer c1, final Integer c2) {
+        int id1 = allGoods.get(c1).getProfit();
+        int id2 = allGoods.get(c2).getProfit();
+        return (id1 < id2) ? 1 : ((id1 == id2) ? 0 : -1);
     }
 }
