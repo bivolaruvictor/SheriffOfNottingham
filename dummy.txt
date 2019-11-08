@@ -26,5 +26,9 @@ Player 1 are 78 bani
 La final de joc
 Jucatorul 0 are pe taraba : 7 7 
 Jucatorul 1 are pe taraba : 9 
-Jucatorul 0 are 92 bani
-Jucatorul 1 are 81 bani
+Jucatorul 0 are 82 bani
+Jucatorul 1 are 78 bani
+
+Dupa bonusuri de king/ queen
+Jucatorul 0 are 105 bani
+Jucatorul 1 are 92 bani

@@ -48,6 +48,7 @@ public class Player {
     public void setRound(final int round) {
         this.round = round;
     }
+
     public Map<Integer, Integer> getMarketFreqMap() {
         return marketFreqMap;
     }
@@ -363,36 +364,28 @@ public class Player {
     }
 
     public void giveBonuses() {
-        //restoreMarket();
-        List<Integer> transformedStore = transformStore(store);
-        System.out.println(showMarket());
-        setStore(transformedStore);
-        System.out.println(showMarket());
-        for (Integer item : transformedStore) {
+        transformStore(getStore());
+
+        for (Integer item : getStore()) {
            addToBudget(allGoods.get(item).getProfit());
         }
 
-
-        setFreq();
-
         if (getKingGoods().size() != 0) {
             for (int i = 0; i < getKingGoods().size(); ++i) {
-                //TODO : NU E BINE - TREBUIE BONUS DE KING
-                LegalGoods legal = (LegalGoods) allGoods.get(i);
+                LegalGoods legal = (LegalGoods) allGoods.get(getKingGoods().get(i));
                 addToBudget(legal.getKingBonus());
             }
         }
 
         if (getQueenGoods().size() != 0) {
             for (int i = 0; i < getQueenGoods().size(); ++i) {
-                //TODO : NU E BINE - TREBUIE BONUS DE KING
-                LegalGoods legal = (LegalGoods) allGoods.get(i);
+                LegalGoods legal = (LegalGoods) allGoods.get(getQueenGoods().get(i));
                 addToBudget(legal.getQueenBonus());
             }
         }
     }
 
-    public List<Integer> transformStore(final List<Integer> untransformed) {
+    public void transformStore(final List<Integer> untransformed) {
         List<Integer> transformed = new ArrayList<>(0);
         for (Integer item : untransformed) {
             if (item <= Constants.MAX_LEGAL_INDEX) {
@@ -414,7 +407,7 @@ public class Player {
         // TODO : Poate el organizez in functie de alt criteriu
         ProfitComparator cmp = new ProfitComparator();
         Collections.sort(transformed, cmp);
-        return transformed;
+        setStore(transformed);
     }
 
     public void setFreq() {
@@ -424,18 +417,6 @@ public class Player {
         }
     }
 
-    public void restoreMarket() {
-        //TODO : POSIBILE ERORI
-        for (int i = 0; i <= Constants.MAX_LEGAL_INDEX; ++i) {
-            if (getMarketFreqMap().get(i) != null) {
-                int count = getMarketFreqMap().get(i);
-                while (count > 0) {
-                    store.add(i);
-                    count--;
-                }
-            }
-        }
-    }
 
     public ArrayList<Integer> addConfiscatedToDeck(final ArrayList<Integer> confiscated) {
         return null;

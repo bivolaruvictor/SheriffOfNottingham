@@ -84,11 +84,6 @@ public final class Main {
                 }
             }
 
-            for (Player player : players) {
-                player.giveBonuses();
-
-            }
-
             fs.writeNewLine();
             fs.writeNewLine();
             fs.writeWord("--------------");
@@ -104,11 +99,64 @@ public final class Main {
                 fs.writeNewLine();
             }
 
+            fs.writeNewLine();
+            fs.writeWord("Dupa bonusuri de king/ queen");
+            fs.writeNewLine();
+
+            for (Player player : players) {
+                player.transformStore(player.getStore());
+                player.setFreq();
+            }
+
+            for (int itemId = 0; itemId <= Constants.MAX_LEGAL_INDEX; ++itemId) {
+                int firstLargest = -1;
+                int secondLargest = -1;
+                int kingId = -1;
+                int queenId = -1;
+                for (int i = 0; i < players.size(); ++i) {
+                    if (players.get(i).getMarketFreqMap().get(itemId) != null) {
+                        if (players.get(i).getMarketFreqMap().get(itemId) > firstLargest) {
+                            firstLargest = players.get(i).getMarketFreqMap().get(itemId);
+                            secondLargest = firstLargest;
+                            queenId = kingId;
+                            kingId = i;
+                        } else {
+                            if (players.get(i).getMarketFreqMap().get(itemId) == firstLargest
+                                    || players.get(i).getMarketFreqMap().get(itemId)  > secondLargest) {
+                                secondLargest = players.get(i).getMarketFreqMap().get(itemId);
+                                queenId = i;
+                            }
+                        }
+                        }
+                    }
+                if (kingId != -1) {
+                    players.get(kingId).getKingGoods().add(itemId);
+                }
+                if (queenId != -1) {
+                    players.get(queenId).getQueenGoods().add(itemId);
+                }
+            }
+
+            for(Player player : players) {
+                System.out.print(player.getId() + " king pe : ");
+                for (Integer item : player.getKingGoods()) {
+                    System.out.print(item + " ");
+                }
+                System.out.println();
+                System.out.print(player.getId() + " queen pe : ");
+                for (Integer item : player.getQueenGoods()) {
+                    System.out.print(item + " ");
+                }
+                System.out.println();
+            }
+
             for (Player player : players) {
                 player.giveBonuses();
-                if (player.getId() == 1) {
-                    player.getKingGoods().add(24);
-                }
+            }
+
+            for (Player player : players) {
+                fs.writeWord("Jucatorul " + player.getId() + " are " + player.getBudget() + " bani");
+                fs.writeNewLine();
             }
 
             fs.close();
