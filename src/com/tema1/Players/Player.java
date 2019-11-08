@@ -149,6 +149,22 @@ public class Player {
         budget += bribe;
     }
 
+    public String getPlayerType() {
+        if (isBasic()) {
+            return "BASIC";
+        }
+
+        if (isGreedy()) {
+            return "GREEDY";
+        }
+
+        if(isBriber()) {
+            return "BRIBER";
+        }
+
+        return null;
+    }
+
     public void makeBag() {
         List<Integer> currentHand;
         List<Integer> illegals = new ArrayList<>();

@@ -1,10 +1,12 @@
 package com.tema1.main;
+import com.tema1.Players.PlayerComparator;
 import com.tema1.common.Constants;
 import com.tema1.Players.Player;
 import fileio.FileSystem;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -144,18 +146,18 @@ public final class Main {
                 }
             }
 
-            for (Player player : players) {
-                System.out.print(player.getId() + " king pe : ");
-                for (Integer item : player.getKingGoods()) {
-                    System.out.print(item + " ");
-                }
-                System.out.println();
-                System.out.print(player.getId() + " queen pe : ");
-                for (Integer item : player.getQueenGoods()) {
-                    System.out.print(item + " ");
-                }
-                System.out.println();
-            }
+//            for (Player player : players) {
+//                System.out.print(player.getId() + " king pe : ");
+//                for (Integer item : player.getKingGoods()) {
+//                    System.out.print(item + " ");
+//                }
+//                System.out.println();
+//                System.out.print(player.getId() + " queen pe : ");
+//                for (Integer item : player.getQueenGoods()) {
+//                    System.out.print(item + " ");
+//                }
+//                System.out.println();
+//            }
 
             for (Player player : players) {
                 player.giveBonuses();
@@ -165,6 +167,13 @@ public final class Main {
                 fs.writeWord("Jucatorul " + player.getId() + " are " + player.getBudget()
                         + " bani");
                 fs.writeNewLine();
+            }
+
+            List<Player> finalPlayers = new ArrayList<Player>(players);
+            PlayerComparator cmp = new PlayerComparator();
+            Collections.sort(finalPlayers,cmp);
+            for (Player player : finalPlayers) {
+                System.out.println(player.getId() + " " + player.getPlayerType() + " " + player.getBudget());
             }
 
             fs.close();
