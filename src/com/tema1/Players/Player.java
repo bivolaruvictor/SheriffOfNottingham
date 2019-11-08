@@ -5,6 +5,9 @@ import com.tema1.common.Constants;
 import java.util.*;
 
 import com.tema1.goods.*;
+import org.apache.commons.collections.SortedBag;
+
+import javax.sound.midi.Soundbank;
 
 
 public class Player {
@@ -56,6 +59,11 @@ public class Player {
     public void pay(Player player, int sum) {
         budget -= sum;
         player.budget += sum;
+    }
+
+    public void takeMoney(Player player, int sum) {
+        budget += sum;
+        player.budget -= sum;
     }
 
     public int getId() {
@@ -307,25 +315,35 @@ public class Player {
     public void basicControl(final List<Player> players) {
         List<Integer> confiscated = new ArrayList<>(0);
         for (Player player : players) {
-            List<Integer> control = player.getBag();
+            List<Integer> control = new ArrayList<>();
+            control = player.getBag();
             Integer whatIsDeclared = player.getDeclaredGoodsId();
-//            for (Integer good : control) {
-//                if (good != whatIsDeclared) {
-//                    for (Integer goods1 : control) {
-//                        confiscated.add(goods1);
-//                    }
-//                    player.emptyBag();
-//                    break;
-//                }
-//            }
+            for (Integer good : control) {
+                if (good != whatIsDeclared) {
+                    for (Integer goods1 : control) {
+                        confiscated.add(goods1);
+                    }
+                    //player.emptyBag();
+                    break;
+                }
+            }
             if (confiscated.size() == 0) {
                 // TODO : DA BANII MERCHANT
                 int sum = player.getBag().size() * allGoods.get(getDeclaredGoodsId()).getPenalty();
                 pay(player, sum);
                 player.addToStore(player.getBag());
                 bag.clear();
+            } else {
+                int sum = 0;
+                for (Integer item : confiscated) {
+                    sum += allGoods.get(item).getPenalty();
+                    takeMoney(player, sum);
+                }
+                confiscated.clear();
             }
+            player.emptyBag();
         }
+        confiscated.clear();
     }
 
     public void greedyControl(List<Player> players) {

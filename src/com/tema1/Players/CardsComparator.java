@@ -21,6 +21,7 @@ public class CardsComparator implements Comparator<Integer> {
 
     public final int compare(final Integer c1, final Integer c2) {
         int freqCompare = freqMap.get(c2).compareTo(freqMap.get(c1));
+        //System.out.println("Compar " + c1 + " : care apare de " + freqMap.get(c1) + " ori\n" + " cu " + c2 +  " : care apare de " + freqMap.get(c2) + " ori\n");
         int profitCompare = compareProfit(c1, c2);
         int indexCompare = compareIndex(c1, c2);
         if (freqCompare == 0) {
@@ -29,8 +30,9 @@ public class CardsComparator implements Comparator<Integer> {
             } else {
                 return profitCompare;
             }
+        } else {
+            return freqCompare;
         }
-        return freqCompare;
     }
 
     public final int compareProfit(final Integer c1, final Integer c2) {
@@ -40,8 +42,8 @@ public class CardsComparator implements Comparator<Integer> {
     }
 
     public final int compareIndex(final Integer c1, final Integer c2) {
-        int id1 = allGoods.get(c1).getProfit();
-        int id2 = allGoods.get(c2).getProfit();
+        int id1 = allGoods.get(c1).getId();
+        int id2 = allGoods.get(c2).getId();
         return (id1 < id2) ? 1 : ((id1 == id2) ? 0 : -1);
     }
 }

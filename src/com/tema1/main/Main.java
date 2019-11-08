@@ -31,6 +31,9 @@ public final class Main {
 
             for (int j = 0; j < gameInput.getRounds(); j++) {
                 for (int k = 0; k < gameInput.getPlayerNames().size(); ++k) {
+                    fs.writeNewLine();
+                    fs.writeWord("--------------------------");
+                    fs.writeNewLine();
                     fs.writeWord("Runda " + (j + 1) + " , " + "Subrunda " + (k + 1));
                     fs.writeNewLine();
                     players.get(k).makeSheriff();
@@ -45,23 +48,27 @@ public final class Main {
                                 cards.add(gameInput.getAssetIds().get(q));
                             }
                             gamer.putInHand(cards);
+                            fs.writeWord("Ce are " + " player " + gamer.getId() + " in mana :");
+                            fs.writeWord(gamer.showHand());
+                            fs.writeNewLine();
+
                             gamer.makeBag();
+                            fs.writeWord("Ce isi pune " + " player "
+                                    + gamer.getId() + " in sac :");
+                            fs.writeWord(gamer.showBag());
+                            fs.writeNewLine();
+                            fs.writeWord("Declara ca are ");
+                            fs.writeInt(gamer.getDeclaredGoodsId());
+                            fs.writeNewLine();
+
                             whereAmI += Constants.HAND_SIZE;
                         }
                     }
 
                     for (Player player : players) {
                         if (!player.isSheriff()) {
-                            fs.writeWord("Ce are " + " player " + player.getId() + " in mana :");
-                            fs.writeWord(player.showHand());
-                            fs.writeNewLine();
-                            fs.writeNewLine();
-                            fs.writeWord("Ce isi pune " + " player "
-                                    + player.getId() + " in sac :");
-                            fs.writeWord(player.showBag());
-                            fs.writeNewLine();
-                            fs.writeWord("Declara ca are ");
-                            fs.writeInt(player.getDeclaredGoodsId());
+                            fs.writeWord("Player " + player.getId()
+                                    + " spune : Nu sunt serif");
                             fs.writeNewLine();
                         } else {
                             fs.writeNewLine();
@@ -71,9 +78,6 @@ public final class Main {
                             player.controlPlayers(players);
                         }
                     }
-                    fs.writeNewLine();
-                    fs.writeWord("--------------------------");
-                    fs.writeNewLine();
                     for (Player player : players) {
                         fs.writeWord("Player " + player.getId() + " are ");
                         fs.writeWord(player.showMoney());
@@ -91,11 +95,13 @@ public final class Main {
             fs.writeWord("La final de joc");
             fs.writeNewLine();
             for (Player player : players) {
-                fs.writeWord("Jucatorul " + player.getId() + " are pe taraba : " + player.showMarket());
+                fs.writeWord("Jucatorul " + player.getId() + " are pe taraba : "
+                        + player.showMarket());
                 fs.writeNewLine();
             }
             for (Player player : players) {
-                fs.writeWord("Jucatorul " + player.getId() + " are " + player.getBudget() + " bani");
+                fs.writeWord("Jucatorul " + player.getId() + " are " + player.getBudget()
+                        + " bani");
                 fs.writeNewLine();
             }
 
@@ -116,13 +122,14 @@ public final class Main {
                 for (int i = 0; i < players.size(); ++i) {
                     if (players.get(i).getMarketFreqMap().get(itemId) != null) {
                         if (players.get(i).getMarketFreqMap().get(itemId) > firstLargest) {
-                            firstLargest = players.get(i).getMarketFreqMap().get(itemId);
                             secondLargest = firstLargest;
+                            firstLargest = players.get(i).getMarketFreqMap().get(itemId);
                             queenId = kingId;
                             kingId = i;
                         } else {
                             if (players.get(i).getMarketFreqMap().get(itemId) == firstLargest
-                                    || players.get(i).getMarketFreqMap().get(itemId)  > secondLargest) {
+                                    || players.get(i).getMarketFreqMap().get(itemId)
+                                    > secondLargest) {
                                 secondLargest = players.get(i).getMarketFreqMap().get(itemId);
                                 queenId = i;
                             }
@@ -137,7 +144,7 @@ public final class Main {
                 }
             }
 
-            for(Player player : players) {
+            for (Player player : players) {
                 System.out.print(player.getId() + " king pe : ");
                 for (Integer item : player.getKingGoods()) {
                     System.out.print(item + " ");
@@ -155,7 +162,8 @@ public final class Main {
             }
 
             for (Player player : players) {
-                fs.writeWord("Jucatorul " + player.getId() + " are " + player.getBudget() + " bani");
+                fs.writeWord("Jucatorul " + player.getId() + " are " + player.getBudget()
+                        + " bani");
                 fs.writeNewLine();
             }
 
