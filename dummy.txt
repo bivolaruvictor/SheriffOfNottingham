@@ -4,6 +4,8 @@ Player 0 spune : N-am carti ca sunt serif
 Ce are  player 1 in mana :21 21 21 24 24 22 22 20 9 0 
 
 Ce isi pune  player 1 in sac :9 
+Declara ca are 9
+
 --------------------------
 Player 0 are 78 bani 
 Player 1 are 82 bani 
@@ -11,8 +13,18 @@ Runda 1 , Subrunda 2
 Ce are  player 0 in mana :24 24 7 7 4 4 20 21 22 9 
 
 Ce isi pune  player 0 in sac :7 7 
+Declara ca are 7
+
 Player 1 spune : N-am carti ca sunt serif
 
 --------------------------
 Player 0 are 82 bani 
 Player 1 are 78 bani 
+
+
+--------------
+La final de joc
+Jucatorul 0 are pe taraba : 7 7 
+Jucatorul 1 are pe taraba : 9 
+Jucatorul 0 are 92 bani
+Jucatorul 1 are 81 bani

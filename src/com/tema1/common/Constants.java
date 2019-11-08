@@ -9,4 +9,6 @@ public final class Constants {
     public static final int MAX_LEGAL_INDEX = 9;
     public static final int MAX_ILLEGAL_INDEX = 24;
     public static final int MINIMUM_BUDGET = 16;
+    public static final int LESS_THAN_TWO_ILLEGAL_MONEY = 5;
+    public static final int MORE_THAN_TWO_ILLEGAL_MONEY = 10;
 }
