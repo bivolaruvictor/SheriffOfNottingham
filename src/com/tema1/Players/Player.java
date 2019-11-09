@@ -24,6 +24,7 @@ public class Player {
     private List<Integer> hand;
     private List<Integer> bag;
     private List<Integer> store;
+    private List<Integer> confiscated;
     private int declaredGoodsId;
     private Map<Integer, Goods> allGoods;
     private List<Integer> kingGoods = new ArrayList<>();
@@ -32,6 +33,7 @@ public class Player {
 
     // Constructor
     public Player(final String playerType, final int id, final int budget) {
+        hand = new ArrayList<>();
         this.budget = budget;
         this.id = id;
         this.playerType = playerType;
@@ -40,6 +42,7 @@ public class Player {
         allGoods = goods.getAllGoods();
         marketFreqMap = new HashMap<>();
         store = new ArrayList<>(0);
+        confiscated = new ArrayList<>(0);
         this.round = 1;
     }
 
@@ -71,7 +74,7 @@ public class Player {
     }
 
     public void putInHand(final List<Integer> chosenCards) {
-        this.hand  = chosenCards;
+        hand  = chosenCards;
     }
 
     public void addToStore(final List<Integer> items) {
@@ -166,11 +169,10 @@ public class Player {
     }
 
     public void makeBag() {
-        List<Integer> currentHand;
+        List<Integer> currentHand = new ArrayList<>(getHand());
         List<Integer> illegals = new ArrayList<>();
         List<Integer> legals = new ArrayList<>();
         List<Integer> sortedHand;
-        currentHand = getHand();
         sortedHand = currentHand;
 
         Map<Integer, Integer> map = new HashMap<>();
@@ -234,6 +236,14 @@ public class Player {
 
     public int getBudget() {
         return budget;
+    }
+
+    public List<Integer> getConfiscated() {
+        return confiscated;
+    }
+
+    public void clearConfiscated() {
+        getConfiscated().clear();
     }
 
     public int getPotentialBribe() {
@@ -329,7 +339,6 @@ public class Player {
     }
 
     public void basicControl(final List<Player> players) {
-        List<Integer> confiscated = new ArrayList<>(0);
         for (Player player : players) {
             List<Integer> control = new ArrayList<>();
             control = player.getBag();
@@ -337,13 +346,13 @@ public class Player {
             for (Integer good : control) {
                 if (good != whatIsDeclared) {
                     for (Integer goods1 : control) {
-                        confiscated.add(goods1);
+                        getConfiscated().add(goods1);
                     }
                     //player.emptyBag();
                     break;
                 }
             }
-            if (confiscated.size() == 0) {
+            if (getConfiscated().size() == 0) {
                 // TODO : DA BANII MERCHANT
                 int sum = player.getBag().size() * allGoods.get(getDeclaredGoodsId()).getPenalty();
                 pay(player, sum);
@@ -351,19 +360,17 @@ public class Player {
                 bag.clear();
             } else {
                 int sum = 0;
-                for (Integer item : confiscated) {
+                for (Integer item : getConfiscated()) {
                     sum += allGoods.get(item).getPenalty();
                     takeMoney(player, sum);
                 }
-                confiscated.clear();
+                clearConfiscated();
             }
             player.emptyBag();
         }
-        confiscated.clear();
     }
 
     public void greedyControl(List<Player> players) {
-        List<Integer> confiscated = new ArrayList<>(0);
         for (Player player : players) {
             List<Integer> control = player.getBag();
             Integer whatIsDeclared = player.getDeclaredGoodsId();
@@ -371,13 +378,13 @@ public class Player {
                 for (Integer good : control) {
                     if (good != whatIsDeclared) {
                         for (Integer goods1 : control) {
-                            confiscated.add(goods1);
+                            getConfiscated().add(goods1);
                         }
                         player.emptyBag();
                         break;
                     }
                 }
-                if (confiscated.size() == 0) {
+                if (getConfiscated().size() == 0) {
                     // TODO : DA BANII MERCHANT
                     int sum = player.getBag().size() * allGoods.get(getDeclaredGoodsId()).getPenalty();
                     pay(player, sum);
@@ -452,8 +459,24 @@ public class Player {
     }
 
 
-    public ArrayList<Integer> addConfiscatedToDeck(final ArrayList<Integer> confiscated) {
-        return null;
+    public List<Integer> addConfiscatedToDeck() {
+        int count = 0;
+        List<Integer> toAdd = new ArrayList<>();
+        System.out.println(showHand());
+        for (Integer i2 : getConfiscated()) {
+            System.out.print(i2 + " ");
+            }
+        System.out.println();
+        for (Integer i1 : getHand()) {
+            for (Integer i2 : getConfiscated()) {
+                if (i1 == i2) {
+                    toAdd.add(i1);
+                    count++;
+                }
+            }
+        }
+        clearConfiscated();
+        return toAdd;
     }
 }
 

@@ -78,6 +78,7 @@ public final class Main {
                                     + " spune : N-am carti ca sunt serif");
                             fs.writeNewLine();
                             player.controlPlayers(players);
+                            player.addConfiscatedToDeck();
                         }
                     }
                     for (Player player : players) {
