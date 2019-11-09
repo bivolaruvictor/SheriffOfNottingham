@@ -11,7 +11,7 @@ public class PlayerComparator implements Comparator<Player> {
         int money1 = p1.getBudget();
         int money2 = p2.getBudget();
         if (money1 == money2) {
-            return (p1.getId() < p2.getId()) ? 1 : ((p1.getId() == p2.getId()) ? 0 : -1);
+            return (p1.getId() < p2.getId()) ? -1 : ((p1.getId() == p2.getId()) ? 0 : 1);
         } else {
             return  (money1 < money2) ? 1 : -1;
         }

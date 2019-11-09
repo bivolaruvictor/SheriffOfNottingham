@@ -87,7 +87,7 @@ public final class Main {
                         fs.writeNewLine();
                     }
                     players.get(k).makeMerchant();
-                    gameInput.getAssetIds().addAll(players.get(k).getToAdd());
+                    gameInput.getAssetIds().addAll(players.get(k ).getToAdd());
                 }
             }
 
@@ -138,8 +138,8 @@ public final class Main {
                                 queenId = i;
                             }
                         }
-                        }
                     }
+                }
                 if (kingId != -1) {
                     players.get(kingId).getKingGoods().add(itemId);
                 }
@@ -148,18 +148,18 @@ public final class Main {
                 }
             }
 
-//            for (Player player : players) {
-//                System.out.print(player.getId() + " king pe : ");
-//                for (Integer item : player.getKingGoods()) {
-//                    System.out.print(item + " ");
-//                }
-//                System.out.println();
-//                System.out.print(player.getId() + " queen pe : ");
-//                for (Integer item : player.getQueenGoods()) {
-//                    System.out.print(item + " ");
-//                }
-//                System.out.println();
-//            }
+            for (Player player : players) {
+                System.out.print(player.getId() + " king pe : ");
+                for (Integer item : player.getKingGoods()) {
+                    System.out.print(item + " ");
+                }
+                System.out.println();
+                System.out.print(player.getId() + " queen pe : ");
+                for (Integer item : player.getQueenGoods()) {
+                    System.out.print(item + " ");
+                }
+                System.out.println();
+            }
 
             for (Player player : players) {
                 player.giveBonuses();
@@ -176,10 +176,7 @@ public final class Main {
             Collections.sort(finalPlayers, cmp);
             for (Player player : finalPlayers) {
                 System.out.println(player.getId() + " " + player.getPlayerType() + " " + player.getBudget());
-            }
-
-            for (Integer i : gameInput.getAssetIds()) {
-                System.out.print(i + " ");
+                fs.writeNewLine();
             }
 
             fs.close();
@@ -190,3 +187,4 @@ public final class Main {
 
     }
 }
+

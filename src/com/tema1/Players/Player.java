@@ -5,13 +5,10 @@ import com.tema1.common.Constants;
 import java.util.*;
 
 import com.tema1.goods.*;
-import org.apache.commons.collections.SortedBag;
-
-import javax.sound.midi.Soundbank;
 
 
 public class Player {
-    int potentialBribe;
+    int bribe;
     private int round;
     private int id;
     private int budget;
@@ -135,7 +132,7 @@ public class Player {
         if (playerType.equals("greedy")) {
             isGreedy = true;
         }
-        if (playerType.equals("briber")) {
+        if (playerType.equals("bribed")) {
             isBriber = true;
         }
     }
@@ -161,7 +158,11 @@ public class Player {
     }
 
     public void offerBribe(final int bribe) {
-        potentialBribe = bribe;
+        this.bribe = bribe;
+    }
+
+    public int getBribe() {
+        return bribe;
     }
 
     public void takeBribe(final int bribe) {
@@ -171,17 +172,13 @@ public class Player {
     public String getPlayerType() {
         if (isBasic()) {
             return "BASIC";
+        } else {
+            if (isGreedy()) {
+                return "GREEDY";
+            } else {
+                return "BRIBED";
+            }
         }
-
-        if (isGreedy()) {
-            return "GREEDY";
-        }
-
-        if(isBriber()) {
-            return "BRIBER";
-        }
-
-        return null;
     }
 
     public void makeBag() {
@@ -217,7 +214,7 @@ public class Player {
         }
 
         if (isBriber()) {
-            makeBriberBag();
+            makeBriberBag(sortedHand, sortedLegals, sortedIllegals);
         }
 
         if (isGreedy()) {
@@ -270,7 +267,7 @@ public class Player {
     }
 
     public int getPotentialBribe() {
-        return potentialBribe;
+        return bribe;
     }
 
     public int getRound() {
@@ -329,21 +326,26 @@ public class Player {
 
     public final void makeGreedyBag(final List<Integer> sortedHand, final List<Integer> sortedLegals,
                                     final List<Integer> sortedIllegals) {
-// TODO : Caz in care runda e para
+        ProfitComparator cmp = new ProfitComparator();
+// TODO : Caz in care runda e impara
         if (getRound() % 2 == 1) {
             makeBasicBag(sortedHand, sortedLegals, sortedIllegals);
         } else {
+            // TODO : Caz in care runda e para
             makeBasicBag(sortedHand, sortedLegals, sortedIllegals);
             if (bag.size() < Constants.BAG_SIZE) {
                 if (!sortedIllegals.isEmpty()) {
-                    bag.add(sortedIllegals.get(0));
+                    List<Integer> tmp = new ArrayList<>(sortedIllegals);
+                    Collections.sort(tmp, cmp);
+                    bag.add(tmp.get(0));
                 }
             }
         }
     }
 
-    public void makeBriberBag() {
-
+    public void makeBriberBag(final List<Integer> sortedHand, final List<Integer> sortedLegals,
+                              final List<Integer> sortedIllegals) {
+        makeBasicBag(sortedHand, sortedLegals, sortedIllegals);
     }
 
 
@@ -363,62 +365,81 @@ public class Player {
 
     public void basicControl(final List<Player> players) {
         clearConfiscated();
-
         for (Player player : players) {
+            List<Integer> legalGoodsToAdd = new ArrayList<>();
             List<Integer> control = new ArrayList<>(player.getBag());
             Integer whatIsDeclared = player.getDeclaredGoodsId();
             for (Integer good : control) {
                 if (good != whatIsDeclared) {
                     getConfiscated().add(good);
+                } else {
+                    legalGoodsToAdd.add(good);
                 }
             }
+
+            player.addToStore(legalGoodsToAdd);
 
             if (getConfiscated().size() == 0) {
                 // TODO : DA BANII MERCHANT
                 int sum = player.getBag().size() * allGoods.get(getDeclaredGoodsId()).getPenalty();
                 pay(player, sum);
-                player.addToStore(player.getBag());
-                // bag.clear();
+                if (legalGoodsToAdd.size() == 0) {
+                    player.addToStore(player.getBag());
+                }
+                player.emptyBag();
             } else {
                 int sum = 0;
                 for (Integer item : getConfiscated()) {
                     sum += allGoods.get(item).getPenalty();
-                    takeMoney(player, sum);
-                    emptyBag();
                 }
+                takeMoney(player, sum);
+                player.emptyBag();
                 setToAdd(addConfiscatedToDeck(player));
             }
         }
     }
 
     public void greedyControl(List<Player> players) {
+        clearConfiscated();
+
         for (Player player : players) {
+            List<Integer> legalGoodsToAdd = new ArrayList<>();
             List<Integer> control = player.getBag();
             Integer whatIsDeclared = player.getDeclaredGoodsId();
-            if (getPotentialBribe() == 0) {
+            if (player.getBribe() == 0) {
                 for (Integer good : control) {
                     if (good != whatIsDeclared) {
-                        for (Integer goods1 : control) {
-                            getConfiscated().add(goods1);
-                        }
-                        player.emptyBag();
-                        break;
+                        getConfiscated().add(good);
+                    } else {
+                        legalGoodsToAdd.add(good);
                     }
                 }
+                player.addToStore(legalGoodsToAdd);
                 if (getConfiscated().size() == 0) {
                     // TODO : DA BANII MERCHANT
                     int sum = player.getBag().size() * allGoods.get(getDeclaredGoodsId()).getPenalty();
                     pay(player, sum);
-                    player.addToStore(player.getBag());
+                    if (legalGoodsToAdd.size() == 0) {
+                        player.addToStore(player.getBag());
+                    }
+                    player.emptyBag();
+                } else {
+                    int sum = 0;
+                    for (Integer item : getConfiscated()) {
+                        sum += allGoods.get(item).getPenalty();
+                    }
+                    takeMoney(player, sum);
+                    player.emptyBag();
+                    setToAdd(addConfiscatedToDeck(player));
                 }
             } else {
-                takeBribe(getPotentialBribe());
+                takeBribe(player.getPotentialBribe());
             }
         }
     }
 
     public void briberControl(List<Player> players) {
-
+        basicControl(players);
     }
 
     public void setStore(List<Integer> store) {
