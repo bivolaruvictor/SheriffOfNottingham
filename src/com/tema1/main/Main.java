@@ -78,7 +78,6 @@ public final class Main {
                                     + " spune : N-am carti ca sunt serif");
                             fs.writeNewLine();
                             player.controlPlayers(players);
-                            player.addConfiscatedToDeck();
                         }
                     }
                     for (Player player : players) {
@@ -88,6 +87,7 @@ public final class Main {
                         fs.writeNewLine();
                     }
                     players.get(k).makeMerchant();
+                    gameInput.getAssetIds().addAll(players.get(k).getToAdd());
                 }
             }
 
@@ -97,6 +97,7 @@ public final class Main {
             fs.writeNewLine();
             fs.writeWord("La final de joc");
             fs.writeNewLine();
+
             for (Player player : players) {
                 fs.writeWord("Jucatorul " + player.getId() + " are pe taraba : "
                         + player.showMarket());
@@ -172,9 +173,13 @@ public final class Main {
 
             List<Player> finalPlayers = new ArrayList<Player>(players);
             PlayerComparator cmp = new PlayerComparator();
-            Collections.sort(finalPlayers,cmp);
+            Collections.sort(finalPlayers, cmp);
             for (Player player : finalPlayers) {
                 System.out.println(player.getId() + " " + player.getPlayerType() + " " + player.getBudget());
+            }
+
+            for (Integer i : gameInput.getAssetIds()) {
+                System.out.print(i + " ");
             }
 
             fs.close();

@@ -25,14 +25,17 @@ public class Player {
     private List<Integer> bag;
     private List<Integer> store;
     private List<Integer> confiscated;
+    private List<Integer> toAdd;
     private int declaredGoodsId;
     private Map<Integer, Goods> allGoods;
     private List<Integer> kingGoods = new ArrayList<>();
     private List<Integer> QueenGoods = new ArrayList<>();
     private Map<Integer, Integer> marketFreqMap;
+    private Integer timesSherriff;
 
     // Constructor
     public Player(final String playerType, final int id, final int budget) {
+        timesSherriff = 0;
         hand = new ArrayList<>();
         this.budget = budget;
         this.id = id;
@@ -43,6 +46,7 @@ public class Player {
         marketFreqMap = new HashMap<>();
         store = new ArrayList<>(0);
         confiscated = new ArrayList<>(0);
+        toAdd = new ArrayList<>(0);
         this.round = 1;
     }
 
@@ -83,6 +87,10 @@ public class Player {
         }
     }
 
+    public void incSherriff() {
+        timesSherriff++;
+    }
+
     public void addToBudget(int sum) {
         budget += sum;
     }
@@ -116,6 +124,10 @@ public class Player {
         return isMerchant;
     }
 
+    public void clearToAdd() {
+        toAdd.clear();
+    }
+
     public void strategySet() {
         if (playerType.equals("basic")) {
             isBasic = true;
@@ -126,6 +138,10 @@ public class Player {
         if (playerType.equals("briber")) {
             isBriber = true;
         }
+    }
+
+    public void setToAdd(List<Integer> toAdd) {
+        this.toAdd.addAll(toAdd);
     }
 
     public boolean isBasic() {
@@ -169,6 +185,9 @@ public class Player {
     }
 
     public void makeBag() {
+        if (getBag().size() != 0) {
+            emptyBag();
+        }
         List<Integer> currentHand = new ArrayList<>(getHand());
         List<Integer> illegals = new ArrayList<>();
         List<Integer> legals = new ArrayList<>();
@@ -220,6 +239,10 @@ public class Player {
 
     public LegalGoods getlGoods() {
         return null;
+    }
+
+    public List<Integer> getToAdd() {
+        return toAdd;
     }
 
     public List<Integer> getBag() {
@@ -339,34 +362,32 @@ public class Player {
     }
 
     public void basicControl(final List<Player> players) {
+        clearConfiscated();
+
         for (Player player : players) {
-            List<Integer> control = new ArrayList<>();
-            control = player.getBag();
+            List<Integer> control = new ArrayList<>(player.getBag());
             Integer whatIsDeclared = player.getDeclaredGoodsId();
             for (Integer good : control) {
                 if (good != whatIsDeclared) {
-                    for (Integer goods1 : control) {
-                        getConfiscated().add(goods1);
-                    }
-                    //player.emptyBag();
-                    break;
+                    getConfiscated().add(good);
                 }
             }
+
             if (getConfiscated().size() == 0) {
                 // TODO : DA BANII MERCHANT
                 int sum = player.getBag().size() * allGoods.get(getDeclaredGoodsId()).getPenalty();
                 pay(player, sum);
                 player.addToStore(player.getBag());
-                bag.clear();
+                // bag.clear();
             } else {
                 int sum = 0;
                 for (Integer item : getConfiscated()) {
                     sum += allGoods.get(item).getPenalty();
                     takeMoney(player, sum);
+                    emptyBag();
                 }
-                clearConfiscated();
+                setToAdd(addConfiscatedToDeck(player));
             }
-            player.emptyBag();
         }
     }
 
@@ -426,6 +447,10 @@ public class Player {
         }
     }
 
+    public Integer getTimesSherriff() {
+        return timesSherriff;
+    }
+
     public void transformStore(final List<Integer> untransformed) {
         List<Integer> transformed = new ArrayList<>(0);
         for (Integer item : untransformed) {
@@ -459,24 +484,19 @@ public class Player {
     }
 
 
-    public List<Integer> addConfiscatedToDeck() {
+    public List<Integer> addConfiscatedToDeck(Player player) {
         int count = 0;
-        List<Integer> toAdd = new ArrayList<>();
-        System.out.println(showHand());
-        for (Integer i2 : getConfiscated()) {
-            System.out.print(i2 + " ");
-            }
-        System.out.println();
-        for (Integer i1 : getHand()) {
+        List<Integer> addable = new ArrayList<>();
+        for (Integer i1 : player.getBag()) {
             for (Integer i2 : getConfiscated()) {
                 if (i1 == i2) {
-                    toAdd.add(i1);
-                    count++;
+                    addable.add(i1);
                 }
             }
         }
+
         clearConfiscated();
-        return toAdd;
+        return addable;
     }
 }
 
