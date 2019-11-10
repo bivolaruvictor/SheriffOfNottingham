@@ -79,7 +79,7 @@ public class Player {
     }
 
     public void putInHand(final List<Integer> chosenCards) {
-        hand  = chosenCards;
+        hand = chosenCards;
     }
 
     public void addToStore(final List<Integer> items) {
@@ -117,6 +117,7 @@ public class Player {
     public boolean isSheriff() {
         return isSheriff;
     }
+
     public List<Integer> getHand() {
         return hand;
     }
@@ -167,6 +168,10 @@ public class Player {
 
     public int getBribe() {
         return bribe;
+    }
+
+    public void resetBribe() {
+        bribe = 0;
     }
 
     public void takeBribe(final Player player, final int pBribe) {
@@ -282,9 +287,6 @@ public class Player {
         bag.clear();
     }
 
-    public void resetOfferBribe() {
-        offerBribe(0);
-    }
 
     // Show
 
@@ -312,7 +314,7 @@ public class Player {
 
     public void makeBasicBag(final List<Integer> sortedHand, final List<Integer> sortedLegals,
                              final List<Integer> sortedIllegals) {
-
+        emptyBag();
         if (sortedLegals.size() != 0) {
             int declaredGood = sortedLegals.get(0);
             for (Integer legal : sortedLegals) {
@@ -324,6 +326,7 @@ public class Player {
             }
             declareGoodsId(declaredGood);
         } else {
+            emptyBag();
             List<Integer> dishonest = sortedIllegals;
             ProfitComparator comp = new ProfitComparator();
             Collections.sort(dishonest, comp);
@@ -344,8 +347,13 @@ public class Player {
             if (bag.size() < Constants.BAG_SIZE) {
                 if (!sortedIllegals.isEmpty()) {
                     List<Integer> tmp = new ArrayList<>(sortedIllegals);
+                    if (bag.size() == 1) {
+                        tmp.remove(0);
+                    }
                     Collections.sort(tmp, cmp);
-                    bag.add(tmp.get(0));
+                    if (!tmp.isEmpty()) {
+                        bag.add(tmp.get(0));
+                    }
                 }
             }
         }
@@ -353,18 +361,17 @@ public class Player {
 
     public void makeBriberBag(final List<Integer> sortedHand, final List<Integer> sortedLegals,
                               final List<Integer> sortedIllegals) {
-            emptyBag();
 
-            resetOfferBribe();
-            ProfitComparator cmp = new ProfitComparator();
+        ProfitComparator cmp = new ProfitComparator();
 
-            List<Integer> tmpIllegals = new ArrayList<>(sortedIllegals);
-            List<Integer> tmpLegals = new ArrayList<>(sortedLegals);
+        List<Integer> tmpIllegals = new ArrayList<>(sortedIllegals);
+        List<Integer> tmpLegals = new ArrayList<>(sortedLegals);
 
 
-            Collections.sort(tmpIllegals, cmp);
-            Collections.sort(tmpLegals, cmp);
+        Collections.sort(tmpIllegals, cmp);
+        Collections.sort(tmpLegals, cmp);
 
+        if (getBudget() > 5) {
             int possibleLoss = 0;
             int numberOfGoods = 0;
             int numberIllegalGoods = 0;
@@ -372,10 +379,6 @@ public class Player {
 
             if (tmpIllegals.size() != 0) {
                 for (Integer item : tmpIllegals) {
-
-                    if (numberIllegalGoods + 1 > 2) {
-                        possibleBribe = Constants.MORE_THAN_TWO_ILLEGAL_MONEY;
-                    }
 
                     // TODO : AICI > ?
                     if (getBudget() - (possibleLoss + allGoods.get(item).getPenalty()) > 0) {
@@ -385,9 +388,11 @@ public class Player {
                             possibleLoss += allGoods.get(item).getPenalty();
                         }
                     }
-
                 }
 
+                if (numberIllegalGoods > 2) {
+                    possibleBribe = Constants.MORE_THAN_TWO_ILLEGAL_MONEY;
+                }
 
                 numberOfGoods += numberIllegalGoods;
 
@@ -395,18 +400,21 @@ public class Player {
                     for (Integer item : tmpLegals) {
                         possibleLoss += allGoods.get(item).getPenalty();
                         // TODO : AICI > ?
-                        if (getBudget() - possibleLoss >= 0 && numberOfGoods < Constants.BAG_SIZE) {
+                        if (getBudget() - possibleLoss > 0 && numberOfGoods < Constants.BAG_SIZE) {
                             getBag().add(item);
                             numberOfGoods++;
                         }
                     }
                 }
 
-                offerBribe(possibleBribe);
                 declareGoodsId(0);
+                offerBribe(possibleBribe);
             } else {
                 makeBasicBag(sortedHand, sortedLegals, sortedIllegals);
             }
+        } else {
+            makeBasicBag(sortedHand, sortedLegals, sortedIllegals);
+        }
     }
 
 
@@ -425,6 +433,7 @@ public class Player {
     }
 
     public void basicControl(final List<Player> players) {
+        emptyBag();
         clearConfiscated();
         for (Player player : players) {
             List<Integer> legalGoodsToAdd = new ArrayList<>();
@@ -462,61 +471,63 @@ public class Player {
 
     public void greedyControl(List<Player> players) {
         clearConfiscated();
+        emptyBag();
 
         for (Player player : players) {
-                List<Integer> legalGoodsToAdd = new ArrayList<>();
-                List<Integer> control = player.getBag();
-                Integer whatIsDeclared = player.getDeclaredGoodsId();
-                if (player.getBribe() == 0) {
-                    for (Integer good : control) {
-                        if (good != whatIsDeclared) {
-                            getConfiscated().add(good);
-                        } else {
-                            legalGoodsToAdd.add(good);
-                        }
-                    }
-                    player.addToStore(legalGoodsToAdd);
-                    if (getConfiscated().size() == 0) {
-                        // TODO : DA BANII MERCHANT
-                        int sum = player.getBag().size() * allGoods.get(getDeclaredGoodsId()).getPenalty();
-                        pay(player, sum);
-                        if (legalGoodsToAdd.size() == 0) {
-                            player.addToStore(player.getBag());
-                        }
-                        player.emptyBag();
+            List<Integer> legalGoodsToAdd = new ArrayList<>();
+            List<Integer> control = player.getBag();
+            Integer whatIsDeclared = player.getDeclaredGoodsId();
+            if (player.getBribe() == 0) {
+                for (Integer good : control) {
+                    if (good != whatIsDeclared) {
+                        getConfiscated().add(good);
                     } else {
-                        int sum = 0;
-                        for (Integer item : getConfiscated()) {
-                            sum += allGoods.get(item).getPenalty();
-                        }
-                        getPaid(player, sum);
-                        player.emptyBag();
-                        setToAdd(addConfiscatedToDeck(player));
+                        legalGoodsToAdd.add(good);
                     }
-                } else {
-                    takeBribe(player, player.getBribe());
-                    player.resetOfferBribe();
-                    player.addToStore(player.getBag());
                 }
+                player.addToStore(legalGoodsToAdd);
+                if (getConfiscated().size() == 0) {
+                    // TODO : DA BANII MERCHANT
+                    int sum = player.getBag().size() * allGoods.get(getDeclaredGoodsId()).getPenalty();
+                    pay(player, sum);
+                    if (legalGoodsToAdd.size() == 0) {
+                        player.addToStore(player.getBag());
+                    }
+                    player.emptyBag();
+                } else {
+                    int sum = 0;
+                    for (Integer item : getConfiscated()) {
+                        sum += allGoods.get(item).getPenalty();
+                    }
+                    getPaid(player, sum);
+                    player.emptyBag();
+                    setToAdd(addConfiscatedToDeck(player));
+                }
+            } else {
+                takeBribe(player, player.getBribe());
+                player.addToStore(player.getBag());
+                player.resetBribe();
+            }
+            player.emptyBag();
+            player.clearConfiscated();
         }
     }
 
     public void briberControl(List<Player> players) {
-        //TODO : Control la jucatorii din stanga si din dreapta
-
-            List<Player> unluckyPlayers = new ArrayList<>(0);
-            if (getId() == getNumPlayers() - 1) {
-                unluckyPlayers.add(players.get(getNumPlayers() - 2));
-                unluckyPlayers.add(players.get(0));
+        List<Player> unluckyPlayers = new ArrayList<>(0);
+        if (getId() == getNumPlayers() - 1) {
+            unluckyPlayers.add(players.get(getId() - 1));
+            unluckyPlayers.add(players.get(0));
+        } else {
+            if (getId() == 0) {
+                unluckyPlayers.add(players.get(getNumPlayers() - 1));
+                unluckyPlayers.add(players.get(1));
             } else {
-                if (getId() == 0) {
-                    unluckyPlayers.add(players.get(getNumPlayers() - 1));
-                    unluckyPlayers.add(players.get(1));
-                } else {
-                    unluckyPlayers.add(players.get(getId() - 1));
-                    unluckyPlayers.add(players.get(getId() + 1));
-                }
+                unluckyPlayers.add(players.get(getId() - 1));
+                unluckyPlayers.add(players.get(getId() + 1));
             }
+        }
+        if (getBudget() >= Constants.MINIMUM_BUDGET) {
             //TODO : Poate aparea o problema
             if (unluckyPlayers.get(0).getId() == unluckyPlayers.get(1).getId()) {
                 unluckyPlayers.remove(0);
@@ -525,12 +536,23 @@ public class Player {
                 basicControl(unluckyPlayers);
                 for (Player player : players) {
                     if (player.getId() != unluckyPlayers.get(0).getId() && player.getId() != unluckyPlayers.get(1).getId()) {
-                        if (player.getBribe() != 0) {
-                            takeBribe(player, player.getBribe());
-                        }
+                        getPaid(player, player.getBribe());
+                        player.addToStore(player.getBag());
+                        player.resetBribe();
                     }
                 }
             }
+        } else {
+            if (unluckyPlayers.get(0).getId() == unluckyPlayers.get(1).getId()) {
+                unluckyPlayers.remove(0);
+            }
+
+            for (Player player : players) {
+                        getPaid(player, player.getBribe());
+                        player.addToStore(player.getBag());
+                        player.resetBribe();
+                }
+        }
     }
 
     public void setStore(List<Integer> store) {

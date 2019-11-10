@@ -49,13 +49,14 @@ public final class Main {
                             for (int q = whereAmI; q < whereAmI + Constants.HAND_SIZE; ++q) {
                                 cards.add(gameInput.getAssetIds().get(q));
                             }
+                            fs.writeNewLine();
                             gamer.putInHand(cards);
-                            fs.writeWord( gamer.getId() + "  " + gamer.getPlayerType() + " are in mana :");
+                            fs.writeWord( gamer.getId() + "  " + gamer.getPlayerType() + " HAND :");
                             fs.writeWord(gamer.showHand());
                             fs.writeNewLine();
 
                             gamer.makeBag();
-                            fs.writeWord(gamer.getId() + "  " + gamer.getPlayerType() + " are in sac :");
+                            fs.writeWord(gamer.getId() + "  " + gamer.getPlayerType() + " SACK :");
                             fs.writeWord(gamer.showBag());
                             fs.writeNewLine();
                             fs.writeWord("Declara ca are ");
@@ -66,17 +67,25 @@ public final class Main {
                         }
                     }
 
+                    fs.writeNewLine();
+
                     for (Player player : players) {
                         if (!player.isSheriff()) {
-                            fs.writeWord(player.getId() + "  " + player.getPlayerType() + " spune : Nu sunt serif");
-                            fs.writeNewLine();
+//                            fs.writeWord(player.getId() + "  " + player.getPlayerType() + " spune : Nu sunt serif");
+//                            fs.writeNewLine();
                         } else {
-                            fs.writeNewLine();
-                            fs.writeWord(player.getId() + "  " + player.getPlayerType() + " spune : N-am carti ca sunt serif");
-                            fs.writeNewLine();
+//                            fs.writeNewLine();
+//                            fs.writeWord(player.getId() + "  " + player.getPlayerType() + " spune : N-am carti ca sunt serif");
+//                            fs.writeNewLine();
                             player.controlPlayers(players);
                         }
                     }
+                    for (Player player : players) {
+                        fs.writeWord(player.getId() + "  " + player.getPlayerType() + " MARKET : "
+                                + player.showMarket());
+                        fs.writeNewLine();
+                    }
+
                     for (Player player : players) {
                         fs.writeWord(player.getId() + "  " + player.getPlayerType() + " are " + player.showMoney() + " bani");
                         fs.writeNewLine();
