@@ -371,7 +371,9 @@ public class Player {
         Collections.sort(tmpIllegals, cmp);
         Collections.sort(tmpLegals, cmp);
 
-        if (getBudget() > 5) {
+        resetBribe();
+
+        if (getBudget() > 6) {
             int possibleLoss = 0;
             int numberOfGoods = 0;
             int numberIllegalGoods = 0;
@@ -433,8 +435,8 @@ public class Player {
     }
 
     public void basicControl(final List<Player> players) {
-        emptyBag();
         clearConfiscated();
+        emptyBag();
         for (Player player : players) {
             List<Integer> legalGoodsToAdd = new ArrayList<>();
             List<Integer> control = new ArrayList<>(player.getBag());
@@ -467,6 +469,8 @@ public class Player {
                 setToAdd(addConfiscatedToDeck(player));
             }
         }
+        emptyBag();
+        clearConfiscated();
     }
 
     public void greedyControl(List<Player> players) {
@@ -527,39 +531,74 @@ public class Player {
                 unluckyPlayers.add(players.get(getId() + 1));
             }
         }
-        if (getBudget() >= Constants.MINIMUM_BUDGET) {
-            //TODO : Poate aparea o problema
-            if (unluckyPlayers.get(0).getId() == unluckyPlayers.get(1).getId()) {
-                unluckyPlayers.remove(0);
+
+        if (unluckyPlayers.get(0).getId() == unluckyPlayers.get(1).getId()) {
+            unluckyPlayers.remove(0);
+            if (getBudget() >= Constants.MINIMUM_BUDGET) {
                 basicControl(unluckyPlayers);
             } else {
-                basicControl(unluckyPlayers);
-                for (Player player : players) {
-                    if (player.getId() != unluckyPlayers.get(0).getId() && player.getId() != unluckyPlayers.get(1).getId()) {
-                        getPaid(player, player.getBribe());
-                        player.addToStore(player.getBag());
-                        player.resetBribe();
-                    }
+                unluckyPlayers.get(0).addToStore(unluckyPlayers.get(0).getBag());
+            }
+            for (Player player : players) {
+                if (player.getId() != unluckyPlayers.get(0).getId()) {
+                    getPaid(player, player.getBribe());
                 }
             }
         } else {
-            if (unluckyPlayers.get(0).getId() == unluckyPlayers.get(1).getId()) {
-                unluckyPlayers.remove(0);
-            }
-
             if (getBudget() >= Constants.MINIMUM_BUDGET) {
-                for (Player player : players) {
+                basicControl(unluckyPlayers);
+            } else {
+                unluckyPlayers.get(0).addToStore(unluckyPlayers.get(0).getBag());
+                unluckyPlayers.get(1).addToStore(unluckyPlayers.get(1).getBag());
+            }
+            for (Player player : players) {
+                if (player.getId() != unluckyPlayers.get(0).getId() && player.getId() != unluckyPlayers.get(1).getId()) {
                     getPaid(player, player.getBribe());
                     player.addToStore(player.getBag());
-                    player.resetBribe();
-                }
-            } else {
-                for (Player player : players) {
-                    player.addToStore(player.getBag());
-                    player.resetBribe();
                 }
             }
         }
+
+
+//        if (getBudget() >= Constants.MINIMUM_BUDGET) {
+//            //TODO : Poate aparea o problema
+//            if (unluckyPlayers.get(0).getId() == unluckyPlayers.get(1).getId()) {
+//                unluckyPlayers.remove(0);
+//                basicControl(unluckyPlayers);
+//            } else {
+//                basicControl(unluckyPlayers);
+//                for (Player player : players) {
+//                    if (player.getId() != unluckyPlayers.get(0).getId() && player.getId() != unluckyPlayers.get(1).getId()) {
+//                        if (getBudget() >= Constants.MINIMUM_BUDGET) {
+//                            getPaid(player, player.getBribe());
+//                            player.addToStore(player.getBag());
+//                            player.resetBribe();
+//                        }
+//                    }
+//                }
+//            }
+//        } else {
+//            if (unluckyPlayers.get(0).getId() == unluckyPlayers.get(1).getId()) {
+//                unluckyPlayers.remove(0);
+//            } else {
+//                for (Player player : unluckyPlayers) {
+//                    player.addToStore(player.getBag());
+//                    player.resetBribe();
+//                }
+//            }
+
+//            if (getBudget() >= Constants.MINIMUM_BUDGET) {
+//                for (Player player : players) {
+//                    getPaid(player, player.getBribe());
+//                    player.addToStore(player.getBag());
+//                    player.resetBribe();
+//                }
+//            } else {
+//                for (Player player : players) {
+//                    player.addToStore(player.getBag());
+//                    player.resetBribe();
+//                }
+//            }
     }
 
     public void setStore(List<Integer> store) {
