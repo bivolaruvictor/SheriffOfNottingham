@@ -547,11 +547,18 @@ public class Player {
                 unluckyPlayers.remove(0);
             }
 
-            for (Player player : players) {
-                        getPaid(player, player.getBribe());
-                        player.addToStore(player.getBag());
-                        player.resetBribe();
+            if (getBudget() >= Constants.MINIMUM_BUDGET) {
+                for (Player player : players) {
+                    getPaid(player, player.getBribe());
+                    player.addToStore(player.getBag());
+                    player.resetBribe();
                 }
+            } else {
+                for (Player player : players) {
+                    player.addToStore(player.getBag());
+                    player.resetBribe();
+                }
+            }
         }
     }
 
