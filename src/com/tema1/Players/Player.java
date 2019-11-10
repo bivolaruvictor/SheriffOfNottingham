@@ -373,7 +373,7 @@ public class Player {
 
         resetBribe();
 
-        if (getBudget() > 6) {
+        if (getBudget() >= 6) {
             int possibleLoss = 0;
             int numberOfGoods = 0;
             int numberIllegalGoods = 0;
