@@ -18,6 +18,14 @@ public class ProfitComparator implements Comparator<Integer> {
     public final int compare(final Integer c1, final Integer c2) {
         int profit1 = allGoods.get(c1).getProfit();
         int profit2 = allGoods.get(c2).getProfit();
-        return (profit1 < profit2) ? 1 : ((profit1 == profit2) ? 0 : -1);
+        if (profit1 == profit2) {
+            return idComparator(c1, c2);
+        } else {
+            return (profit1 < profit2) ? 1 : -1;
+        }
+    }
+
+    public final int idComparator(final Integer c1, final Integer c2) {
+        return (c1 < c2) ? 1 : ((c1 == c2) ? 0 : -1);
     }
 }

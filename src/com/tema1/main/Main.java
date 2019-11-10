@@ -25,7 +25,7 @@ public final class Main {
             FileSystem fs = new FileSystem(args[0], args[1]);
             for (int i = 0; i < gameInput.getPlayerNames().size(); ++i) {
                 players.add(new Player(gameInput.getPlayerNames().get(i), i,
-                        Constants.STARTING_BUDGET));
+                        Constants.STARTING_BUDGET, gameInput.getPlayerNames().size()));
                 players.get(i).strategySet();
             }
 
@@ -50,13 +50,12 @@ public final class Main {
                                 cards.add(gameInput.getAssetIds().get(q));
                             }
                             gamer.putInHand(cards);
-                            fs.writeWord("Ce are " + " player " + gamer.getId() + " in mana :");
+                            fs.writeWord( gamer.getId() + "  " + gamer.getPlayerType() + " are in mana :");
                             fs.writeWord(gamer.showHand());
                             fs.writeNewLine();
 
                             gamer.makeBag();
-                            fs.writeWord("Ce isi pune " + " player "
-                                    + gamer.getId() + " in sac :");
+                            fs.writeWord(gamer.getId() + "  " + gamer.getPlayerType() + " are in sac :");
                             fs.writeWord(gamer.showBag());
                             fs.writeNewLine();
                             fs.writeWord("Declara ca are ");
@@ -69,25 +68,21 @@ public final class Main {
 
                     for (Player player : players) {
                         if (!player.isSheriff()) {
-                            fs.writeWord("Player " + player.getId()
-                                    + " spune : Nu sunt serif");
+                            fs.writeWord(player.getId() + "  " + player.getPlayerType() + " spune : Nu sunt serif");
                             fs.writeNewLine();
                         } else {
                             fs.writeNewLine();
-                            fs.writeWord("Player " + player.getId()
-                                    + " spune : N-am carti ca sunt serif");
+                            fs.writeWord(player.getId() + "  " + player.getPlayerType() + " spune : N-am carti ca sunt serif");
                             fs.writeNewLine();
                             player.controlPlayers(players);
                         }
                     }
                     for (Player player : players) {
-                        fs.writeWord("Player " + player.getId() + " are ");
-                        fs.writeWord(player.showMoney());
-                        fs.writeWord(" bani ");
+                        fs.writeWord(player.getId() + "  " + player.getPlayerType() + " are " + player.showMoney() + " bani");
                         fs.writeNewLine();
                     }
                     players.get(k).makeMerchant();
-                    gameInput.getAssetIds().addAll(players.get(k ).getToAdd());
+                    gameInput.getAssetIds().addAll(players.get(k).getToAdd());
                 }
             }
 
@@ -99,12 +94,12 @@ public final class Main {
             fs.writeNewLine();
 
             for (Player player : players) {
-                fs.writeWord("Jucatorul " + player.getId() + " are pe taraba : "
+                fs.writeWord(player.getId() + "  " + player.getPlayerType() + " are pe taraba : "
                         + player.showMarket());
                 fs.writeNewLine();
             }
             for (Player player : players) {
-                fs.writeWord("Jucatorul " + player.getId() + " are " + player.getBudget()
+                fs.writeWord(player.getId() + "  " + player.getPlayerType() + " are " + player.getBudget()
                         + " bani");
                 fs.writeNewLine();
             }
@@ -165,17 +160,11 @@ public final class Main {
                 player.giveBonuses();
             }
 
-            for (Player player : players) {
-                fs.writeWord("Jucatorul " + player.getId() + " are " + player.getBudget()
-                        + " bani");
-                fs.writeNewLine();
-            }
-
             List<Player> finalPlayers = new ArrayList<Player>(players);
             PlayerComparator cmp = new PlayerComparator();
             Collections.sort(finalPlayers, cmp);
             for (Player player : finalPlayers) {
-                System.out.println(player.getId() + " " + player.getPlayerType() + " " + player.getBudget());
+                fs.writeWord(player.getId() + " " + player.getPlayerType() + " " + player.getBudget());
                 fs.writeNewLine();
             }
 
