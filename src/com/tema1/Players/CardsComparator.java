@@ -21,7 +21,6 @@ public class CardsComparator implements Comparator<Integer> {
 
     public final int compare(final Integer c1, final Integer c2) {
         int freqCompare = freqMap.get(c2).compareTo(freqMap.get(c1));
-        //System.out.println("Compar " + c1 + " : care apare de " + freqMap.get(c1) + " ori\n" + " cu " + c2 +  " : care apare de " + freqMap.get(c2) + " ori\n");
         int profitCompare = compareProfit(c1, c2);
         int indexCompare = compareIndex(c1, c2);
         if (freqCompare == 0) {

@@ -2,7 +2,6 @@ package com.tema1.Players;
 
 
 import java.util.Comparator;
-import java.util.Map;
 
 public class PlayerComparator implements Comparator<Player> {
 

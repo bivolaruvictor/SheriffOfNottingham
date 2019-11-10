@@ -3,6 +3,8 @@ import com.tema1.Players.PlayerComparator;
 import com.tema1.common.Constants;
 import com.tema1.Players.Player;
 import fileio.FileSystem;
+import com.tema1.main.GameInputLoader;
+
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,89 +35,30 @@ public final class Main {
 
             for (int j = 0; j < gameInput.getRounds(); j++) {
                 for (int k = 0; k < gameInput.getPlayerNames().size(); ++k) {
-                    fs.writeNewLine();
-                    fs.writeWord("--------------------------");
-                    fs.writeNewLine();
-                    fs.writeWord("Runda " + (j + 1) + " , " + "Subrunda " + (k + 1));
-                    fs.writeNewLine();
                     players.get(k).makeSheriff();
-                    // POATE E O PROBLEMA
                     players.get(k).setRound(j + 1);
                     for (Player gamer : players) {
-                        // POATE E O PROBLEMA
                         gamer.setRound(j + 1);
                         if (!gamer.isSheriff()) {
                             List<Integer> cards = new ArrayList<>(Constants.HAND_SIZE);
                             for (int q = whereAmI; q < whereAmI + Constants.HAND_SIZE; ++q) {
                                 cards.add(gameInput.getAssetIds().get(q));
                             }
-                            fs.writeNewLine();
                             gamer.putInHand(cards);
-                            fs.writeWord( gamer.getId() + "  " + gamer.getPlayerType() + " HAND :");
-                            fs.writeWord(gamer.showHand());
-                            fs.writeNewLine();
-
                             gamer.makeBag();
-                            fs.writeWord(gamer.getId() + "  " + gamer.getPlayerType() + " SACK :");
-                            fs.writeWord(gamer.showBag());
-                            fs.writeNewLine();
-                            fs.writeWord("Declara ca are ");
-                            fs.writeInt(gamer.getDeclaredGoodsId());
-                            fs.writeNewLine();
-
                             whereAmI += Constants.HAND_SIZE;
                         }
                     }
 
-                    fs.writeNewLine();
-
                     for (Player player : players) {
-                        if (!player.isSheriff()) {
-//                            fs.writeWord(player.getId() + "  " + player.getPlayerType() + " spune : Nu sunt serif");
-//                            fs.writeNewLine();
-                        } else {
-//                            fs.writeNewLine();
-//                            fs.writeWord(player.getId() + "  " + player.getPlayerType() + " spune : N-am carti ca sunt serif");
-//                            fs.writeNewLine();
+                        if (player.isSheriff()) {
                             player.controlPlayers(players);
                         }
-                    }
-                    for (Player player : players) {
-                        fs.writeWord(player.getId() + "  " + player.getPlayerType() + " MARKET : "
-                                + player.showMarket());
-                        fs.writeNewLine();
-                    }
-
-                    for (Player player : players) {
-                        fs.writeWord(player.getId() + "  " + player.getPlayerType() + " are " + player.showMoney() + " bani");
-                        fs.writeNewLine();
                     }
                     players.get(k).makeMerchant();
                     gameInput.getAssetIds().addAll(players.get(k).getToAdd());
                 }
             }
-
-            fs.writeNewLine();
-            fs.writeNewLine();
-            fs.writeWord("--------------");
-            fs.writeNewLine();
-            fs.writeWord("La final de joc");
-            fs.writeNewLine();
-
-            for (Player player : players) {
-                fs.writeWord(player.getId() + "  " + player.getPlayerType() + " are pe taraba : "
-                        + player.showMarket());
-                fs.writeNewLine();
-            }
-            for (Player player : players) {
-                fs.writeWord(player.getId() + "  " + player.getPlayerType() + " are " + player.getBudget()
-                        + " bani");
-                fs.writeNewLine();
-            }
-
-            fs.writeNewLine();
-            fs.writeWord("Dupa bonusuri de king/ queen");
-            fs.writeNewLine();
 
             for (Player player : players) {
                 player.transformStore(player.getStore());
@@ -135,7 +78,8 @@ public final class Main {
                             queenId = kingId;
                             kingId = i;
                         } else {
-                            if (players.get(i).getMarketFreqMap().get(itemId) == firstLargest
+                            if (players.get(i).getMarketFreqMap().get(itemId)
+                                    == firstLargest && queenId == -1
                                     || players.get(i).getMarketFreqMap().get(itemId)
                                     > secondLargest) {
                                 secondLargest = players.get(i).getMarketFreqMap().get(itemId);
@@ -152,18 +96,6 @@ public final class Main {
                 }
             }
 
-            for (Player player : players) {
-                System.out.print(player.getId() + " king pe : ");
-                for (Integer item : player.getKingGoods()) {
-                    System.out.print(item + " ");
-                }
-                System.out.println();
-                System.out.print(player.getId() + " queen pe : ");
-                for (Integer item : player.getQueenGoods()) {
-                    System.out.print(item + " ");
-                }
-                System.out.println();
-            }
 
             for (Player player : players) {
                 player.giveBonuses();
@@ -173,9 +105,10 @@ public final class Main {
             PlayerComparator cmp = new PlayerComparator();
             Collections.sort(finalPlayers, cmp);
             for (Player player : finalPlayers) {
-                fs.writeWord(player.getId() + " " + player.getPlayerType() + " " + player.getBudget());
-                fs.writeNewLine();
+                System.out.println(player.getId() + " "
+                        + player.getPlayerType() + " " + player.getBudget());
             }
+
 
             fs.close();
         } catch (IOException e) {

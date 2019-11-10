@@ -2,10 +2,17 @@ package com.tema1.Players;
 
 import com.tema1.common.Constants;
 
-import java.sql.SQLOutput;
-import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Collections;
 
-import com.tema1.goods.*;
+
+import com.tema1.goods.IllegalGoods;
+import com.tema1.goods.Goods;
+import com.tema1.goods.GoodsFactory;
+import com.tema1.goods.LegalGoods;
 
 
 public class Player {
@@ -28,7 +35,7 @@ public class Player {
     private int declaredGoodsId;
     private Map<Integer, Goods> allGoods;
     private List<Integer> kingGoods = new ArrayList<>();
-    private List<Integer> QueenGoods = new ArrayList<>();
+    private List<Integer> queenGoods = new ArrayList<>();
     private Map<Integer, Integer> marketFreqMap;
     private Integer timesSherriff;
 
@@ -50,31 +57,22 @@ public class Player {
         this.round = 1;
     }
 
-    public String typeToString() {
-        return playerType;
-    }
-
-    // Setteri
-    public void setRound(final int round) {
+    public final void setRound(final int round) {
         this.round = round;
     }
 
-    public Map<Integer, Integer> getMarketFreqMap() {
-        return marketFreqMap;
-    }
-
-    public void pay(Player player, int sum) {
+    private void pay(final Player player, final int sum) {
         budget -= sum;
         player.budget += sum;
     }
 
-    public void getPaid(Player player, int sum) {
+    private void getPaid(final Player player, final int sum) {
         budget += sum;
         player.budget -= sum;
     }
 
 
-    public int getId() {
+    public final int getId() {
         return id;
     }
 
@@ -82,21 +80,21 @@ public class Player {
         hand = chosenCards;
     }
 
-    public void addToStore(final List<Integer> items) {
+    private void addToStore(final List<Integer> items) {
         for (Integer i : items) {
             store.add(i);
         }
     }
 
-    public void incSherriff() {
+    public final void incSherriff() {
         timesSherriff++;
     }
 
-    public void addToBudget(int sum) {
+    public final void addToBudget(final int sum) {
         budget += sum;
     }
 
-    public String showHand() {
+    public final String showHand() {
         StringBuilder toShow = new StringBuilder();
         for (Integer integer : hand) {
             toShow.append(integer).append(" ");
@@ -104,33 +102,29 @@ public class Player {
         return toShow.toString();
     }
 
-    public void makeSheriff() {
+    public final void makeSheriff() {
         isMerchant = false;
         isSheriff = true;
     }
 
-    public void makeMerchant() {
+    public final void makeMerchant() {
         isMerchant = true;
         isSheriff = false;
     }
 
-    public boolean isSheriff() {
+    public final boolean isSheriff() {
         return isSheriff;
     }
 
-    public List<Integer> getHand() {
+    public final List<Integer> getHand() {
         return hand;
     }
 
-    public boolean isMerchant() {
-        return isMerchant;
+    public final Map<Integer, Integer> getMarketFreqMap() {
+        return marketFreqMap;
     }
 
-    public void clearToAdd() {
-        toAdd.clear();
-    }
-
-    public void strategySet() {
+    public final void strategySet() {
         if (playerType.equals("basic")) {
             isBasic = true;
         }
@@ -142,43 +136,43 @@ public class Player {
         }
     }
 
-    public void setToAdd(List<Integer> toAdd) {
+    public final void setToAdd(final List<Integer> toAdd) {
         this.toAdd.addAll(toAdd);
     }
 
-    public boolean isBasic() {
+    public final boolean isBasic() {
         return isBasic;
     }
 
-    public boolean isGreedy() {
+    public final boolean isGreedy() {
         return isGreedy;
     }
 
-    public boolean isBriber() {
+    public final boolean isBriber() {
         return isBriber;
     }
 
-    public void declareGoodsId(final int goodId) {
+    public final void declareGoodsId(final int goodId) {
         this.declaredGoodsId = goodId;
     }
 
-    public void offerBribe(final int bribe) {
-        this.bribe = bribe;
+    public final void offerBribe(final int pBribe) {
+        this.bribe = pBribe;
     }
 
-    public int getBribe() {
+    public final int getBribe() {
         return bribe;
     }
 
-    public void resetBribe() {
+    public final void resetBribe() {
         bribe = 0;
     }
 
-    public void takeBribe(final Player player, final int pBribe) {
+    public final void takeBribe(final Player player, final int pBribe) {
         getPaid(player, pBribe);
     }
 
-    public String getPlayerType() {
+    public final String getPlayerType() {
         if (isBasic()) {
             return "BASIC";
         } else {
@@ -190,7 +184,7 @@ public class Player {
         }
     }
 
-    public void makeBag() {
+    public final void makeBag() {
         if (getBag().size() != 0) {
             emptyBag();
         }
@@ -235,62 +229,58 @@ public class Player {
 
     // Getteri
 
-    public List<Integer> getKingGoods() {
+    public final List<Integer> getKingGoods() {
         return kingGoods;
     }
 
-    public List<Integer> getQueenGoods() {
-        return QueenGoods;
+    public final List<Integer> getQueenGoods() {
+        return queenGoods;
     }
 
-    public LegalGoods getlGoods() {
-        return null;
-    }
-
-    public List<Integer> getToAdd() {
+    public final List<Integer> getToAdd() {
         return toAdd;
     }
 
-    public List<Integer> getBag() {
+    public final List<Integer> getBag() {
         return bag;
     }
 
-    public int getDeclaredGoodsId() {
+    public final int getDeclaredGoodsId() {
         return declaredGoodsId;
     }
 
-    public List<Integer> getStore() {
+    public final List<Integer> getStore() {
         return store;
     }
 
-    public int getBudget() {
+    public final int getBudget() {
         return budget;
     }
 
-    public int getNumPlayers() {
+    public final int getNumPlayers() {
         return numPlayers;
     }
 
-    public List<Integer> getConfiscated() {
+    public final List<Integer> getConfiscated() {
         return confiscated;
     }
 
-    public void clearConfiscated() {
+    public final void clearConfiscated() {
         getConfiscated().clear();
     }
 
-    public int getRound() {
+    public final int getRound() {
         return round;
     }
 
-    public void emptyBag() {
+    public final void emptyBag() {
         bag.clear();
     }
 
 
     // Show
 
-    public String showBag() {
+    public final String showBag() {
         StringBuilder toShow = new StringBuilder();
         for (Integer integer : getBag()) {
             toShow.append(integer).append(" ");
@@ -298,7 +288,7 @@ public class Player {
         return toShow.toString();
     }
 
-    public String showMarket() {
+    public final String showMarket() {
         StringBuilder toShow = new StringBuilder();
         for (Integer integer : getStore()) {
             toShow.append(integer).append(" ");
@@ -306,13 +296,13 @@ public class Player {
         return toShow.toString();
     }
 
-    public String showMoney() {
+    public final String showMoney() {
         return String.valueOf(budget);
     }
 
     // Game Mechanics
 
-    public void makeBasicBag(final List<Integer> sortedHand, final List<Integer> sortedLegals,
+    public final void makeBasicBag(final List<Integer> sortedHand, final List<Integer> sortedLegals,
                              final List<Integer> sortedIllegals) {
         emptyBag();
         if (sortedLegals.size() != 0) {
@@ -335,7 +325,8 @@ public class Player {
         }
     }
 
-    public final void makeGreedyBag(final List<Integer> sortedHand, final List<Integer> sortedLegals,
+    public final void makeGreedyBag(final List<Integer> sortedHand,
+                                    final List<Integer> sortedLegals,
                                     final List<Integer> sortedIllegals) {
         ProfitComparator cmp = new ProfitComparator();
 // TODO : Caz in care runda e impara
@@ -359,7 +350,8 @@ public class Player {
         }
     }
 
-    public void makeBriberBag(final List<Integer> sortedHand, final List<Integer> sortedLegals,
+    public final void makeBriberBag(final List<Integer> sortedHand,
+                                    final List<Integer> sortedLegals,
                               final List<Integer> sortedIllegals) {
 
         ProfitComparator cmp = new ProfitComparator();
@@ -373,7 +365,7 @@ public class Player {
 
         resetBribe();
 
-        if (getBudget() >= 6) {
+        if (getBudget() >= Constants.BRIBER_LOWER_LIMIT) {
             int possibleLoss = 0;
             int numberOfGoods = 0;
             int numberIllegalGoods = 0;
@@ -420,7 +412,7 @@ public class Player {
     }
 
 
-    public void controlPlayers(List<Player> players) {
+    public final void controlPlayers(final List<Player> players) {
         if (isBasic() && getBudget() >= Constants.MINIMUM_BUDGET) {
             basicControl(players);
         }
@@ -434,7 +426,7 @@ public class Player {
         }
     }
 
-    public void basicControl(final List<Player> players) {
+    public final void basicControl(final List<Player> players) {
         clearConfiscated();
         emptyBag();
         for (Player player : players) {
@@ -473,7 +465,7 @@ public class Player {
         clearConfiscated();
     }
 
-    public void greedyControl(List<Player> players) {
+    public final void greedyControl(final List<Player> players) {
         clearConfiscated();
         emptyBag();
 
@@ -492,7 +484,8 @@ public class Player {
                 player.addToStore(legalGoodsToAdd);
                 if (getConfiscated().size() == 0) {
                     // TODO : DA BANII MERCHANT
-                    int sum = player.getBag().size() * allGoods.get(getDeclaredGoodsId()).getPenalty();
+                    int sum = player.getBag().size()
+                            * allGoods.get(getDeclaredGoodsId()).getPenalty();
                     pay(player, sum);
                     if (legalGoodsToAdd.size() == 0) {
                         player.addToStore(player.getBag());
@@ -517,7 +510,7 @@ public class Player {
         }
     }
 
-    public void briberControl(List<Player> players) {
+    public final void briberControl(final List<Player> players) {
         List<Player> unluckyPlayers = new ArrayList<>(0);
         if (getId() == getNumPlayers() - 1) {
             unluckyPlayers.add(players.get(getId() - 1));
@@ -552,60 +545,20 @@ public class Player {
                 unluckyPlayers.get(1).addToStore(unluckyPlayers.get(1).getBag());
             }
             for (Player player : players) {
-                if (player.getId() != unluckyPlayers.get(0).getId() && player.getId() != unluckyPlayers.get(1).getId()) {
+                if (player.getId() != unluckyPlayers.get(0).getId()
+                        && player.getId() != unluckyPlayers.get(1).getId()) {
                     getPaid(player, player.getBribe());
                     player.addToStore(player.getBag());
                 }
             }
         }
-
-
-//        if (getBudget() >= Constants.MINIMUM_BUDGET) {
-//            //TODO : Poate aparea o problema
-//            if (unluckyPlayers.get(0).getId() == unluckyPlayers.get(1).getId()) {
-//                unluckyPlayers.remove(0);
-//                basicControl(unluckyPlayers);
-//            } else {
-//                basicControl(unluckyPlayers);
-//                for (Player player : players) {
-//                    if (player.getId() != unluckyPlayers.get(0).getId() && player.getId() != unluckyPlayers.get(1).getId()) {
-//                        if (getBudget() >= Constants.MINIMUM_BUDGET) {
-//                            getPaid(player, player.getBribe());
-//                            player.addToStore(player.getBag());
-//                            player.resetBribe();
-//                        }
-//                    }
-//                }
-//            }
-//        } else {
-//            if (unluckyPlayers.get(0).getId() == unluckyPlayers.get(1).getId()) {
-//                unluckyPlayers.remove(0);
-//            } else {
-//                for (Player player : unluckyPlayers) {
-//                    player.addToStore(player.getBag());
-//                    player.resetBribe();
-//                }
-//            }
-
-//            if (getBudget() >= Constants.MINIMUM_BUDGET) {
-//                for (Player player : players) {
-//                    getPaid(player, player.getBribe());
-//                    player.addToStore(player.getBag());
-//                    player.resetBribe();
-//                }
-//            } else {
-//                for (Player player : players) {
-//                    player.addToStore(player.getBag());
-//                    player.resetBribe();
-//                }
-//            }
     }
 
-    public void setStore(List<Integer> store) {
+    public final void setStore(final List<Integer> store) {
         this.store = store;
     }
 
-    public void giveBonuses() {
+    public final void giveBonuses() {
         transformStore(getStore());
 
         for (Integer item : getStore()) {
@@ -627,21 +580,21 @@ public class Player {
         }
     }
 
-    public Integer getTimesSherriff() {
+    public final Integer getTimesSherriff() {
         return timesSherriff;
     }
 
-    public void transformStore(final List<Integer> untransformed) {
+    public final void transformStore(final List<Integer> untransformed) {
         List<Integer> transformed = new ArrayList<>(0);
         for (Integer item : untransformed) {
             if (item <= Constants.MAX_LEGAL_INDEX) {
                 transformed.add(item);
             } else {
                 IllegalGoods illegal = (IllegalGoods) allGoods.get(item);
-                Map<Goods, Integer> toAdd = illegal.getIllegalBonus();
+                Map<Goods, Integer> illegalToAdd = illegal.getIllegalBonus();
                 addToBudget(allGoods.get(item).getProfit());
                 // TODO : ofera legal bonus cards pentru illegal cards
-                for (Map.Entry<Goods, Integer> entry : toAdd.entrySet()) {
+                for (Map.Entry<Goods, Integer> entry : illegalToAdd.entrySet()) {
                     Integer goodId = entry.getKey().getId();
                     Integer howMany = entry.getValue();
                     for (int i = 0; i < howMany; ++i) {
@@ -656,7 +609,7 @@ public class Player {
         setStore(transformed);
     }
 
-    public void setFreq() {
+    public final void setFreq() {
         for (int current : getStore()) {
             int count = marketFreqMap.getOrDefault(current, 0);
             marketFreqMap.put(current, count + 1);
@@ -664,7 +617,7 @@ public class Player {
     }
 
 
-    public List<Integer> addConfiscatedToDeck(Player player) {
+    public final List<Integer> addConfiscatedToDeck(final Player player) {
         int count = 0;
         List<Integer> addable = new ArrayList<>();
         for (Integer i1 : player.getBag()) {
@@ -678,6 +631,7 @@ public class Player {
         clearConfiscated();
         return addable;
     }
+
 }
 
 
