@@ -41,9 +41,9 @@ public class GreedyPlayer extends BasicPlayer {
             if (getBag().size() < Constants.BAG_SIZE) {
                 if (!getSortedIllegals().isEmpty()) {
                     List<Integer> tmp = new ArrayList<>(getSortedIllegals());
-                    if (getBag().size() == 1) {
-                        tmp.remove(0);
-                    }
+//                    if (getBag().size() == 1) {
+//                        tmp.remove(0);
+//                    }
                     Collections.sort(tmp, cmp);
                     if (!tmp.isEmpty()) {
                         getBag().add(tmp.get(0));

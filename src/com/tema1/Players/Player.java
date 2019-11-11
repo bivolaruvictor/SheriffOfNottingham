@@ -21,7 +21,6 @@ public class Player {
     private int round;
     private int id;
     private int budget;
-    private PlayersType playerType;
     private boolean isSheriff = false;
     private boolean isMerchant = false;
     private boolean isBasic = false;

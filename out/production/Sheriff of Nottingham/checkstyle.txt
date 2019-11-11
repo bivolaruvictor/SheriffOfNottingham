@@ -1,10 +1,5 @@
 Starting audit...
 [ERROR] /mnt/c/Users/bivol/IdeaProjects/Sheriff-of-Nottingham/src/com/tema1/common/Constants.java:3:1: Utility classes should not have a public or default constructor. [HideUtilityClassConstructor]
-[ERROR] /mnt/c/Users/bivol/IdeaProjects/Sheriff-of-Nottingham/src/com/tema1/main/Main.java:2: Using the '.*' form of import should be avoided - com.tema1.Players.*. [AvoidStarImport]
-[ERROR] /mnt/c/Users/bivol/IdeaProjects/Sheriff-of-Nottingham/src/com/tema1/main/Main.java:17:5: Method length is 179 lines (max allowed is 150). [MethodLength]
-[ERROR] /mnt/c/Users/bivol/IdeaProjects/Sheriff-of-Nottingham/src/com/tema1/main/Main.java:29: Line is longer than 100 characters (found 115). [LineLength]
-[ERROR] /mnt/c/Users/bivol/IdeaProjects/Sheriff-of-Nottingham/src/com/tema1/main/Main.java:32: Line is longer than 100 characters (found 120). [LineLength]
-[ERROR] /mnt/c/Users/bivol/IdeaProjects/Sheriff-of-Nottingham/src/com/tema1/main/Main.java:35: Line is longer than 100 characters (found 124). [LineLength]
 [ERROR] /mnt/c/Users/bivol/IdeaProjects/Sheriff-of-Nottingham/src/com/tema1/Players/BasicPlayer.java:12:5: Class 'BasicPlayer' looks like designed for extension (can be subclassed), but the method 'getType' does not have javadoc that explains how to do that safely. If class is not designed for extension consider making the class 'BasicPlayer' final or making the method 'getType' static/final/abstract/empty, or adding allowed annotation for the method. [DesignForExtension]
 [ERROR] /mnt/c/Users/bivol/IdeaProjects/Sheriff-of-Nottingham/src/com/tema1/Players/BasicPlayer.java:16:5: Class 'BasicPlayer' looks like designed for extension (can be subclassed), but the method 'setType' does not have javadoc that explains how to do that safely. If class is not designed for extension consider making the class 'BasicPlayer' final or making the method 'setType' static/final/abstract/empty, or adding allowed annotation for the method. [DesignForExtension]
 [ERROR] /mnt/c/Users/bivol/IdeaProjects/Sheriff-of-Nottingham/src/com/tema1/Players/BasicPlayer.java:20:5: Class 'BasicPlayer' looks like designed for extension (can be subclassed), but the method 'getPlayerType' does not have javadoc that explains how to do that safely. If class is not designed for extension consider making the class 'BasicPlayer' final or making the method 'getPlayerType' static/final/abstract/empty, or adding allowed annotation for the method. [DesignForExtension]
@@ -14,4 +9,4 @@ Starting audit...
 [ERROR] /mnt/c/Users/bivol/IdeaProjects/Sheriff-of-Nottingham/src/com/tema1/Players/Player.java:170:35: '{' at column 35 should have line break after. [LeftCurly]
 [ERROR] /mnt/c/Users/bivol/IdeaProjects/Sheriff-of-Nottingham/src/com/tema1/Players/Player.java:198:5: Class 'Player' looks like designed for extension (can be subclassed), but the method 'getAllGoods' does not have javadoc that explains how to do that safely. If class is not designed for extension consider making the class 'Player' final or making the method 'getAllGoods' static/final/abstract/empty, or adding allowed annotation for the method. [DesignForExtension]
 Audit done.
-Checkstyle ends with 14 errors.
+Checkstyle ends with 9 errors.
