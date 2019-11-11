@@ -10,7 +10,7 @@ public class BriberPlayer extends BasicPlayer {
     private PlayersType type;
 
     @Override
-    public final PlayersType getType() {
+    public PlayersType getType() {
         return type;
     }
 
@@ -50,8 +50,7 @@ public class BriberPlayer extends BasicPlayer {
 
             if (tmpIllegals.size() != 0) {
                 for (Integer item : tmpIllegals) {
-
-                    // TODO : AICI > ?
+                    /*Pentru fiecare bun ilegal, face verificarea*/
                     if (getBudget() - (possibleLoss + getAllGoods().get(item).getPenalty()) > 0) {
                         if (numberIllegalGoods < Constants.BAG_SIZE) {
                             numberIllegalGoods++;
@@ -67,10 +66,11 @@ public class BriberPlayer extends BasicPlayer {
 
                 numberOfGoods += numberIllegalGoods;
 
+                /* Daca mai are loc in sac, incearca
+                sa completeze cu bunuri legale, daca isi permite*/
                 if (getBag().size() != Constants.BAG_SIZE) {
                     for (Integer item : tmpLegals) {
                         possibleLoss += getAllGoods().get(item).getPenalty();
-                        // TODO : AICI > ?
                         if (getBudget() - possibleLoss > 0 && numberOfGoods < Constants.BAG_SIZE) {
                             getBag().add(item);
                             numberOfGoods++;
@@ -81,9 +81,11 @@ public class BriberPlayer extends BasicPlayer {
                 declareGoodsId(0);
                 offerBribe(possibleBribe);
             } else {
+                /* Daca nu are niciun bun ilegal , va proceda ca un jucator basic*/
                 super.makeBag();
             }
         } else {
+            /* Daca nu are suficienti bani va proceda ca un jucator basic*/
             super.makeBag();
         }
     }
@@ -91,6 +93,7 @@ public class BriberPlayer extends BasicPlayer {
     @Override
     public final void controlPlayers(final List<Player> players) {
         emptyBag();
+        /* Verificarile facute vecinilor*/
         List<Player> unluckyPlayers = new ArrayList<>(0);
         if (getId() == getNumPlayers() - 1) {
             unluckyPlayers.add(players.get(getId() - 1));
@@ -105,28 +108,29 @@ public class BriberPlayer extends BasicPlayer {
             }
         }
 
+        /* Cazul in care sunt doar 2 jucatori si vecinii sunt acelasi jucator*/
         if (unluckyPlayers.get(0).getId() == unluckyPlayers.get(1).getId()) {
             unluckyPlayers.remove(0);
             if (getBudget() >= Constants.MINIMUM_BUDGET) {
+                /* Daca isi permite, atunci il verifica*/
                 super.controlPlayers(unluckyPlayers);
             } else {
+                /* Altfel isi pune tot pe taraba*/
                 unluckyPlayers.get(0).addToStore(unluckyPlayers.get(0).getBag());
-            }
-            for (Player player : players) {
-                if (player.getId() != unluckyPlayers.get(0).getId()) {
-                    getPaid(player, player.getBribe());
-                }
             }
         } else {
             if (getBudget() >= Constants.MINIMUM_BUDGET) {
+                /* Daca isi permite, atunci ii verifica*/
                 super.controlPlayers(unluckyPlayers);
             } else {
+                /* Altfel isi pun tot pe taraba*/
                 unluckyPlayers.get(0).addToStore(unluckyPlayers.get(0).getBag());
                 unluckyPlayers.get(1).addToStore(unluckyPlayers.get(1).getBag());
             }
             for (Player player : players) {
                 if (player.getId() != unluckyPlayers.get(0).getId()
                         && player.getId() != unluckyPlayers.get(1).getId()) {
+                    /*Le ia celorlalti jucatori mita fara sa ii verifice*/
                     getPaid(player, player.getBribe());
                     player.addToStore(player.getBag());
                 }

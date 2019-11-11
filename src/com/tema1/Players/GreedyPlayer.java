@@ -11,7 +11,7 @@ public class GreedyPlayer extends BasicPlayer {
 
 
     @Override
-    public final PlayersType getType() {
+    public PlayersType getType() {
         return type;
     }
 
@@ -32,14 +32,18 @@ public class GreedyPlayer extends BasicPlayer {
     public final void makeBag() {
         arrangeCards();
         ProfitComparator cmp = new ProfitComparator();
-// TODO : Caz in care runda e impara
         if (getRound() % 2 == 1) {
+            /* In rundele impare se comporta ca un basic*/
             super.makeBag();
         } else {
-            // TODO : Caz in care runda e para
             super.makeBag();
+            /*In rundele pare dupa ce isi face sacul ca un jucator basic,
+            incearca sa isi mai puna un bun ilegal cu profitul maxim*/
             if (getBag().size() < Constants.BAG_SIZE) {
                 if (!getBag().isEmpty()) {
+                    /*In cazul in care si-a pus deja un bun ilegal pe taraba
+                    dupa strategia de basic, scoatem acel bun din vectorul de bunuri ilegale
+                    pe care il sortam, de aceasta data doar in functie de profit*/
                     if (getBag().get(0) > Constants.MAX_LEGAL_INDEX) {
                         getSortedIllegals().remove(getBag().get(0));
                         if (!getSortedIllegals().isEmpty()) {
@@ -47,6 +51,8 @@ public class GreedyPlayer extends BasicPlayer {
                             getBag().add(getSortedIllegals().get(0));
                         }
                     } else {
+                        /* Altfel punem primul bun din vectorul de ilegale,
+                        dupa ce il sortam in functie de profit*/
                         if (!getSortedIllegals().isEmpty()) {
                             Collections.sort(getSortedIllegals(), cmp);
                             getBag().add(getSortedIllegals().get(0));
@@ -66,6 +72,7 @@ public class GreedyPlayer extends BasicPlayer {
             List<Integer> control = player.getBag();
             Integer whatIsDeclared = player.getDeclaredGoodsId();
             if (player.getBribe() == 0) {
+                /* Daca nu da mita il controleaza cum ar face-o un jucator basic*/
                 for (Integer good : control) {
                     if (good != whatIsDeclared) {
                         getConfiscated().add(good);
@@ -75,7 +82,6 @@ public class GreedyPlayer extends BasicPlayer {
                 }
                 player.addToStore(legalGoodsToAdd);
                 if (getConfiscated().size() == 0) {
-                    // TODO : DA BANII MERCHANT
                     int sum = player.getBag().size()
                             * getAllGoods().get(getDeclaredGoodsId()).getPenalty();
                     pay(player, sum);
@@ -93,6 +99,7 @@ public class GreedyPlayer extends BasicPlayer {
                     setToAdd(addConfiscatedToDeck(player));
                 }
             } else {
+                /* Daca da mita, ii ia mita si il lasa sa treaca fara sa verifice*/
                 takeBribe(player, player.getBribe());
                 player.addToStore(player.getBag());
                 player.resetBribe();

@@ -23,9 +23,6 @@ public class Player {
     private int budget;
     private boolean isSheriff = false;
     private boolean isMerchant = false;
-    private boolean isBasic = false;
-    private boolean isGreedy = false;
-    private boolean isBriber = false;
     private List<Integer> hand;
     private List<Integer> bag;
     private List<Integer> store;
@@ -69,9 +66,16 @@ public class Player {
         player.budget -= sum;
     }
 
+    /*
+     Creez un Map de frecvente care tine toate bunurile
+     diferite de pe taraba si frecventa acestora
+    */
 
-    public final int getId() {
-        return id;
+    public final void setFreq() {
+        for (int current : getStore()) {
+            int count = marketFreqMap.getOrDefault(current, 0);
+            marketFreqMap.put(current, count + 1);
+        }
     }
 
     public final void putInHand(final List<Integer> chosenCards) {
@@ -79,23 +83,14 @@ public class Player {
     }
 
     final void addToStore(final List<Integer> items) {
-        for (Integer i : items) {
-            store.add(i);
-        }
+        getStore().addAll(items);
     }
 
     public final void addToBudget(final int sum) {
         budget += sum;
     }
 
-    public final String showHand() {
-        StringBuilder toShow = new StringBuilder();
-        for (Integer integer : hand) {
-            toShow.append(integer).append(" ");
-        }
-        return toShow.toString();
-    }
-
+    /* E folosit doar pentru a face un jucator serif */
     public final void setRole() {
         isMerchant = false;
         isSheriff = true;
@@ -118,32 +113,8 @@ public class Player {
         return marketFreqMap;
     }
 
-    public final void strategySet() {
-        if (getPlayerType().equals(PlayersType.basic)) {
-            isBasic = true;
-        }
-        if (getPlayerType().equals(PlayersType.greedy)) {
-            isGreedy = true;
-        }
-        if (getPlayerType().equals(PlayersType.bribed)) {
-            isBriber = true;
-        }
-    }
-
     public final void setToAdd(final List<Integer> toAdd) {
         this.toAdd.addAll(toAdd);
-    }
-
-    public final boolean isBasic() {
-        return isBasic;
-    }
-
-    public final boolean isGreedy() {
-        return isGreedy;
-    }
-
-    public final boolean isBriber() {
-        return isBriber;
     }
 
     public final void declareGoodsId(final int goodId) {
@@ -166,9 +137,24 @@ public class Player {
         getPaid(player, pBribe);
     }
 
-    public String getPlayerType() { return null; }
+    public final void clearSortedLegals() {
+        sortedLegals.clear();
+    }
 
-    // Getteri
+    public final void clearSortedIllegals() {
+        sortedIllegals.clear();
+    }
+
+    // Metoda suprascrisa care imi returneaza tipul playerului
+    public String getPlayerType() {
+        return null;
+    }
+
+    /* Getteri */
+
+    public final int getId() {
+        return id;
+    }
 
     public final List<Integer> getKingGoods() {
         return kingGoods;
@@ -178,6 +164,7 @@ public class Player {
         return queenGoods;
     }
 
+    /* Returneaza bunurile confiscate spre a fi adaugate la finalul pachetului */
     public final List<Integer> getToAdd() {
         return toAdd;
     }
@@ -190,11 +177,13 @@ public class Player {
         return declaredGoodsId;
     }
 
+    /* Metoda care intoarce taraba */
     public final List<Integer> getStore() {
         return store;
     }
 
-    public Map<Integer, Goods> getAllGoods() {
+    /* Metoda care intoarce Map-ul de bunuri */
+    public final Map<Integer, Goods> getAllGoods() {
         return allGoods;
     }
 
@@ -202,16 +191,8 @@ public class Player {
         return sortedLegals;
     }
 
-    public final void clearSortedLegals() {
-        sortedLegals.clear();
-    }
-
     public final List<Integer> getSortedIllegals() {
         return sortedIllegals;
-    }
-
-    public final void clearSortedIllegals() {
-        sortedIllegals.clear();
     }
 
     public final int getBudget() {
@@ -235,33 +216,17 @@ public class Player {
     }
 
     public final void emptyBag() {
-        bag.clear();
+        getBag().clear();
     }
 
+    /* Game Mechanics */
 
-    // Show
+    public void makeBag() {  }
 
-    public final String showBag() {
-        StringBuilder toShow = new StringBuilder();
-        for (Integer integer : getBag()) {
-            toShow.append(integer).append(" ");
-        }
-        return toShow.toString();
-    }
+    public void controlPlayers(final List<Player> players) {    }
 
-    public final String showMarket() {
-        StringBuilder toShow = new StringBuilder();
-        for (Integer integer : getStore()) {
-            toShow.append(integer).append(" ");
-        }
-        return toShow.toString();
-    }
-
-    public final String showMoney() {
-        return String.valueOf(budget);
-    }
-
-    // Game Mechanics
+    /* Metoda care separa cartile din mana in carti legale
+        sortate si carti ilegale sortate*/
 
     public final void arrangeCards() {
         if (getBag().size() != 0) {
@@ -272,6 +237,7 @@ public class Player {
 
         clearSortedIllegals();
         clearSortedLegals();
+
         Map<Integer, Integer> map = new HashMap<>();
         for (int current : sortedHand) {
             int count = map.getOrDefault(current, 0);
@@ -282,54 +248,34 @@ public class Player {
                 getSortedIllegals().add(current);
             }
         }
+        /* Creez un map de frecvente pe care i-l trimit comparatorului*/
 
+        /* Sortare dupa frecventa, profit si apoi Id*/
         CardsComparator comp = new CardsComparator(map);
+
         Collections.sort(sortedHand, comp);
         Collections.sort(getSortedLegals(), comp);
         Collections.sort(getSortedIllegals(), comp);
     }
-
-    public void makeBag() {  }
-
-    public void controlPlayers(final List<Player> players) {    }
 
 
     public final void setStore(final List<Integer> store) {
         this.store = store;
     }
 
-    public final void giveBonuses() {
-        transformStore(getStore());
-
-        for (Integer item : getStore()) {
-           addToBudget(allGoods.get(item).getProfit());
-        }
-
-        if (getKingGoods().size() != 0) {
-            for (int i = 0; i < getKingGoods().size(); ++i) {
-                LegalGoods legal = (LegalGoods) allGoods.get(getKingGoods().get(i));
-                addToBudget(legal.getKingBonus());
-            }
-        }
-
-        if (getQueenGoods().size() != 0) {
-            for (int i = 0; i < getQueenGoods().size(); ++i) {
-                LegalGoods legal = (LegalGoods) allGoods.get(getQueenGoods().get(i));
-                addToBudget(legal.getQueenBonus());
-            }
-        }
-    }
-
+    /* Transform cartile ilegale ajunse pe taraba in cartile legale date ca bonus*/
     public final void transformStore(final List<Integer> untransformed) {
         List<Integer> transformed = new ArrayList<>(0);
         for (Integer item : untransformed) {
             if (item <= Constants.MAX_LEGAL_INDEX) {
                 transformed.add(item);
             } else {
+                /* Daca sunt ilegale, fac conversia*/
                 IllegalGoods illegal = (IllegalGoods) allGoods.get(item);
                 Map<Goods, Integer> illegalToAdd = illegal.getIllegalBonus();
+                /* Adaug profitul cartii, dupa care o convertesc */
                 addToBudget(allGoods.get(item).getProfit());
-                // TODO : ofera legal bonus cards pentru illegal cards
+
                 for (Map.Entry<Goods, Integer> entry : illegalToAdd.entrySet()) {
                     Integer goodId = entry.getKey().getId();
                     Integer howMany = entry.getValue();
@@ -339,16 +285,35 @@ public class Player {
                 }
             }
         }
-        // TODO : Poate el organizez in functie de alt criteriu
+
+        /* Le sortez dupa profit, de exemplu*/
         ProfitComparator cmp = new ProfitComparator();
         Collections.sort(transformed, cmp);
         setStore(transformed);
     }
 
-    public final void setFreq() {
-        for (int current : getStore()) {
-            int count = marketFreqMap.getOrDefault(current, 0);
-            marketFreqMap.put(current, count + 1);
+    public final void giveBonuses() {
+        transformStore(getStore());
+        /* Dau bonusurile dupa ce am transformat toate cartile in carti legale*/
+
+        for (Integer item : getStore()) {
+           addToBudget(allGoods.get(item).getProfit());
+        }
+
+        /* Daca e king pe ceva, il premiez*/
+        if (getKingGoods().size() != 0) {
+            for (int i = 0; i < getKingGoods().size(); ++i) {
+                LegalGoods legal = (LegalGoods) allGoods.get(getKingGoods().get(i));
+                addToBudget(legal.getKingBonus());
+            }
+        }
+
+        /* Daca e queen pe ceva, il premiez*/
+        if (getQueenGoods().size() != 0) {
+            for (int i = 0; i < getQueenGoods().size(); ++i) {
+                LegalGoods legal = (LegalGoods) allGoods.get(getQueenGoods().get(i));
+                addToBudget(legal.getQueenBonus());
+            }
         }
     }
 
@@ -356,6 +321,10 @@ public class Player {
     public final List<Integer> addConfiscatedToDeck(final Player player) {
         List<Integer> addable = new ArrayList<>();
         for (Integer i1 : player.getBag()) {
+            /*Cum bag-ul nu este sortat in niciun fel, pentru a le pastra ordinea cartilor
+            confiscate caut fiecare bun din bag in cartile confiscate. Daca il gasesc printre
+            confiscate, il bag in pachetul provizoriu de adaugat la final pe ultima pozitie,
+            asigurand pastrarea ordinii*/
             for (Integer i2 : getConfiscated()) {
                 if (i1.equals(i2)) {
                     addable.add(i1);

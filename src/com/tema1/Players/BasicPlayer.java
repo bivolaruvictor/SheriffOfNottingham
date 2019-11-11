@@ -29,6 +29,7 @@ public class BasicPlayer extends Player {
     public void makeBag() {
         arrangeCards();
         emptyBag();
+        /* Ne asiguram ca nu ramane nimic in sac de la runda trecuta*/
         if (getSortedLegals().size() != 0) {
             int declaredGood = getSortedLegals().get(0);
             for (Integer legal : getSortedLegals()) {
@@ -41,9 +42,14 @@ public class BasicPlayer extends Player {
             declareGoodsId(declaredGood);
         } else {
             emptyBag();
+            /*E obligat sa aleaga cartea ilegala cu profit maxim*/
             List<Integer> dishonest = getSortedIllegals();
+            /*E nevoie de aceasta sortare, deoarece in sortedIllegals sunt sortate
+                dupa criteriul general : frecventa -> profit -> id*/
+
             ProfitComparator comp = new ProfitComparator();
             Collections.sort(dishonest, comp);
+            /* Adaug prima carte din lista sortata, stiind ca sigur are profitul maxim*/
             getBag().add(dishonest.get(0));
             declareGoodsId(0);
         }
@@ -57,6 +63,7 @@ public class BasicPlayer extends Player {
             List<Integer> control = new ArrayList<>(player.getBag());
             Integer whatIsDeclared = player.getDeclaredGoodsId();
             for (Integer good : control) {
+                /* Daca exista vreo carte diferita de cele declarate, o confisca*/
                 if (!good.equals(whatIsDeclared)) {
                     getConfiscated().add(good);
                 } else {
@@ -66,6 +73,7 @@ public class BasicPlayer extends Player {
 
             player.addToStore(legalGoodsToAdd);
 
+            /* Daca nu confisca nimic, este nevoit sa il plateasca pe comerciant*/
             if (getConfiscated().size() == 0) {
                 // TODO : DA BANII MERCHANT
                 int sum = player.getBag().size()
@@ -82,6 +90,8 @@ public class BasicPlayer extends Player {
                 }
                 getPaid(player, sum);
                 player.emptyBag();
+                /*II ia banii penalty ul pe bunuri, i le confisca, si
+                le da spre punerea la finalul pachetului*/
                 setToAdd(addConfiscatedToDeck(player));
             }
             player.emptyBag();

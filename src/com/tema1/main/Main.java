@@ -40,7 +40,6 @@ public final class Main {
                         }
                     }
                 }
-                players.get(i).strategySet();
             }
 
             int whereAmI = 0;
