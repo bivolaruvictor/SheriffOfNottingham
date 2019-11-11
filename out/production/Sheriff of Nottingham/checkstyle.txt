@@ -1,6 +1,10 @@
 Starting audit...
 [ERROR] /mnt/c/Users/bivol/IdeaProjects/Sheriff-of-Nottingham/src/com/tema1/common/Constants.java:3:1: Utility classes should not have a public or default constructor. [HideUtilityClassConstructor]
-[ERROR] /mnt/c/Users/bivol/IdeaProjects/Sheriff-of-Nottingham/src/com/tema1/Players/CardsComparator.java:24: Line is longer than 100 characters (found 162). [LineLength]
-[ERROR] /mnt/c/Users/bivol/IdeaProjects/Sheriff-of-Nottingham/src/com/tema1/Players/PlayerComparator.java:5:8: Unused import - java.util.Map. [UnusedImports]
+[ERROR] /mnt/c/Users/bivol/IdeaProjects/Sheriff-of-Nottingham/src/com/tema1/main/Main.java:18:5: Method length is 174 lines (max allowed is 150). [MethodLength]
+[ERROR] /mnt/c/Users/bivol/IdeaProjects/Sheriff-of-Nottingham/src/com/tema1/main/Main.java:71:50: Must have at least one statement. [EmptyBlock]
+[ERROR] /mnt/c/Users/bivol/IdeaProjects/Sheriff-of-Nottingham/src/com/tema1/main/Main.java:90:65: ')' is preceded with whitespace. [ParenPad]
+[ERROR] /mnt/c/Users/bivol/IdeaProjects/Sheriff-of-Nottingham/src/com/tema1/main/Main.java:134: Line is longer than 100 characters (found 110). [LineLength]
+[ERROR] /mnt/c/Users/bivol/IdeaProjects/Sheriff-of-Nottingham/src/com/tema1/main/Main.java:178: Line is longer than 100 characters (found 109). [LineLength]
+[ERROR] /mnt/c/Users/bivol/IdeaProjects/Sheriff-of-Nottingham/src/com/tema1/Players/Player.java:79:5: Class 'Player' looks like designed for extension (can be subclassed), but the method 'putInHand' does not have javadoc that explains how to do that safely. If class is not designed for extension consider making the class 'Player' final or making the method 'putInHand' static/final/abstract/empty, or adding allowed annotation for the method. [DesignForExtension]
 Audit done.
-Checkstyle ends with 3 errors.
+Checkstyle ends with 7 errors.

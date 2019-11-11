@@ -1,6 +1,0 @@
-Starting audit...
-[ERROR] /mnt/c/Users/bivol/IdeaProjects/Sheriff-of-Nottingham/src/com/tema1/common/Constants.java:3:1: Utility classes should not have a public or default constructor. [HideUtilityClassConstructor]
-[ERROR] /mnt/c/Users/bivol/IdeaProjects/Sheriff-of-Nottingham/src/com/tema1/main/Main.java:6:1: Redundant import from the same package - com.tema1.main.GameInputLoader. [RedundantImport]
-[ERROR] /mnt/c/Users/bivol/IdeaProjects/Sheriff-of-Nottingham/src/com/tema1/Players/Player.java:79:5: Class 'Player' looks like designed for extension (can be subclassed), but the method 'putInHand' does not have javadoc that explains how to do that safely. If class is not designed for extension consider making the class 'Player' final or making the method 'putInHand' static/final/abstract/empty, or adding allowed annotation for the method. [DesignForExtension]
-Audit done.
-Checkstyle ends with 3 errors.
