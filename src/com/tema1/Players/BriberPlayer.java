@@ -42,7 +42,7 @@ public class BriberPlayer extends BasicPlayer {
 
         resetBribe();
 
-        if (getBudget() >= Constants.BRIBER_LOWER_LIMIT) {
+        if (getBudget() > Constants.BRIBER_LOWER_LIMIT) {
             int possibleLoss = 0;
             int numberOfGoods = 0;
             int numberIllegalGoods = 0;
@@ -90,6 +90,7 @@ public class BriberPlayer extends BasicPlayer {
 
     @Override
     public final void controlPlayers(final List<Player> players) {
+        emptyBag();
         List<Player> unluckyPlayers = new ArrayList<>(0);
         if (getId() == getNumPlayers() - 1) {
             unluckyPlayers.add(players.get(getId() - 1));
